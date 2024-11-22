@@ -31,8 +31,13 @@ class Scorer:
         self.client = client
         self.variant = goodfire.Variant(variant)
 
+    def parseStrToList(self, score_gen: str):
+        numbers = re.findall(r'-?\d*\.?\d+', score_gen)
+        weights = [float(x) for x in numbers]  # Convert strings to floats
+        return weights
+
     
-    def score_features(self, target_behavior: str, critique: str, features):
+    def score_features(self, target_behavior: str, critique: str, features, prev_scores):
         """Score a list of features to get their weights.
 
         Args:
@@ -44,13 +49,19 @@ class Scorer:
         Returns:
             List[float]: Ordered list of feature weights between -1 and 1
         """
+        
+        if (critique is None or len(critique) == 0):
+            critique = f"""Your previous output scores are {prev_scores}, and the feedback is {critique}, adjust the score to improve critique."""
+        else:
+            critique = ""
         self.SYS_PROMPT = f"""
 Instruction for the assistant:
 You are tasked with {target_behavior}
-Your role is to output a list of scores between -1 and 1 when given a list of features.
+{critique}
+Your role is to output a List of scores between -1 and 1 when given a python List of features. Two lists should have the same length.
 Example:
     User: FeatureGroup([0: "The user is directing the model to modify or transform content", [1: "The model is being instructed how to answer",].\
-    Response: [0.3, -0.7]
+    System Response: [0.3, -0.7]
 """
         score_gen = ""
         for token in client.chat.completions.create(
@@ -60,12 +71,27 @@ Example:
             ],
             model=self.variant,
             stream=True,
-            max_completion_tokens=500,
+            max_completion_tokens=50,
         ):
             score_gen += token.choices[0].delta.content
-        
-        numbers = re.findall(r'-?\d*\.?\d+', score_gen)
-        weights = [float(x) for x in numbers]  # Convert strings to floats
+        print(f"{score_gen=}")
+        weights = self.parseStrToList(score_gen)
+        while len(weights) != len(features):
+            score_gen = ""
+            for token in client.chat.completions.create(
+                [
+                    {"role": "system", "content": self.SYS_PROMPT},
+                    {"role": "user", "content": f"You didn't give me score or \
+                        the score does not have right length, please give me a list of scores based on \{str(features)}"}
+                ],
+                model=self.variant,
+                stream=True,
+                max_completion_tokens=50,
+            ):
+                score_gen += token.choices[0].delta.content
+            print(f"{score_gen=}")
+            weights = self.parseStrToList(score_gen)
+
         return weights
 
 class Judge:
@@ -113,6 +139,8 @@ class SteeredModel:
             features (FeatureGroup): List of feature values
             scores (List[float]): List of scores between -1 and 1 for the corresponding features
         """
+        print(f"{features=}, {scores=}")
+
         assert len(features) == len(scores)
         self.variant.reset()
         for feature, score in zip(features, scores):
@@ -141,24 +169,26 @@ if __name__ == "__main__":
     client = goodfire.Client(GOODFIRE_API_KEY)
     TARGET_BEHAVIOR = "Be good at math."
     EPOCHS = 10
-    PROMPT = "What is the capital of France?" #for now fixed
+    PROMPT = "Which one is bigger, 9.9 or 9.11?" #for now fixed
     
     retriever = Retriever(client, "meta-llama/Meta-Llama-3-8B-Instruct")
     scorer = Scorer(client, "meta-llama/Meta-Llama-3-8B-Instruct")
     judge = Judge(client, "meta-llama/Meta-Llama-3-8B-Instruct")
     steered_model = SteeredModel(client, "meta-llama/Meta-Llama-3-8B-Instruct")
+    model_output = steered_model.generate(PROMPT)
+    print(f"{model_output=}")
    
     features = retriever.retrieve_features(TARGET_BEHAVIOR)
-    scores = scorer.score_features(TARGET_BEHAVIOR, "no feedback", features)
+    scores = scorer.score_features(TARGET_BEHAVIOR, "", features, [])
     steered_model.set_features(features, scores)
     model_output = steered_model.generate(PROMPT)
     for i in range(EPOCHS):
         print(f"Epoch {i}")
         critique = judge.judge_output(TARGET_BEHAVIOR, model_output, PROMPT)
-        scores = scorer.score_features(TARGET_BEHAVIOR, critique, features)
+        scores = scorer.score_features(TARGET_BEHAVIOR, critique, features, scores)
         steered_model.set_features(features, scores)
         model_output = steered_model.generate(PROMPT)
     
-        print(PROMPT)
-        print(critique)
-        print(model_output)
+        print(f"{PROMPT=}")
+        print(f"{model_output=}")
+        print(f"{critique=}")
