@@ -1,12 +1,17 @@
 import goodfire
-from typing import Str, List
+from typing import List
+import re
+from prompts import JUDGE_SYSTEM_PROMPT
+from goodfire import FeatureGroup
+import os
+
 
 class Retriever:
     def __init__(self, client: goodfire.Client, variant: str):
         self.client = client
-        self.variant = variant
+        self.variant = goodfire.Variant(variant)
 
-    def retrieve_features(self, prompt: Str):
+    def retrieve_features(self, target_behavior: str):
         """Retrieve features relevant to a given prompt.
 
         Args:
@@ -15,7 +20,7 @@ class Retriever:
             List[features]: List of feature values retrieved from the search
         """
         pirate_features, relevance = self.client.features.search(
-            prompt,
+            target_behavior,
             model=self.variant,
             top_k=5
         )
@@ -24,9 +29,10 @@ class Retriever:
 class Scorer:
     def __init__(self, client: goodfire.Client, variant: str):
         self.client = client
-        self.variant = variant
+        self.variant = goodfire.Variant(variant)
+
     
-    def score_features(self, target_behavior: Str, critique: Str, features):
+    def score_features(self, target_behavior: str, critique: str, features):
         """Score a list of features to get their weights.
 
         Args:
@@ -38,15 +44,37 @@ class Scorer:
         Returns:
             List[float]: Ordered list of feature weights between -1 and 1
         """
-        weights = []
+        self.SYS_PROMPT = f"""
+Instruction for the assistant:
+You are tasked with {target_behavior}
+Your role is to output a list of scores between -1 and 1 when given a list of features.
+Example:
+    User: FeatureGroup([0: "The user is directing the model to modify or transform content", [1: "The model is being instructed how to answer",].\
+    Response: [0.3, -0.7]
+"""
+        score_gen = ""
+        for token in client.chat.completions.create(
+            [
+                {"role": "system", "content": self.SYS_PROMPT},
+                {"role": "user", "content": f"{str(features)}"}
+            ],
+            model=self.variant,
+            stream=True,
+            max_completion_tokens=500,
+        ):
+            score_gen += token.choices[0].delta.content
+        
+        numbers = re.findall(r'-?\d*\.?\d+', score_gen)
+        weights = [float(x) for x in numbers]  # Convert strings to floats
         return weights
-    
+
 class Judge:
     def __init__(self, client: goodfire.Client, variant: str):  
         self.client = client
-        self.variant = variant
+        self.variant = goodfire.Variant(variant)
+        self.SYS_PROMPT = JUDGE_SYSTEM_PROMPT
     
-    def judge_output(self, target_behavior: Str, steered_model_output: Str, steered_model_input: Str):
+    def judge_output(self, target_behavior: str, steered_model_output: str, steered_model_input: str):
         """Judge a steered model output against a target behavior.
 
         Args:
@@ -59,6 +87,78 @@ class Judge:
             str: A free-text critique evaluating how well the steered output
                 matches the target behavior given the input
         """
-        critique = ""
-        return critique
+        #maybe look at textgrad loss?
+        completion = ""
+        for token in self.client.chat.completions.create(
+            [
+                {"role": "system", "content": self.SYS_PROMPT},
+                {"role": "user", "content": f"""Input prompt:\n{steered_model_input}\n\nResponse:\n{steered_model_output}\n\nTarget Behavior:{target_behavior}\n\n"""}
+            ],
+            model=self.variant,
+            stream=True,
+            max_completion_tokens=200,
+        ):
+            completion += token.choices[0].delta.content
+        return completion
+
+class SteeredModel:
+    def __init__(self, client: goodfire.Client, variant: str):
+        self.client = client
+        self.variant = goodfire.Variant(variant)
+        
+    def set_features(self, features, scores: List[float]):
+        """Set the features and scores for the steered model.
+
+        Args:
+            features (FeatureGroup): List of feature values
+            scores (List[float]): List of scores between -1 and 1 for the corresponding features
+        """
+        assert len(features) == len(scores)
+        self.variant.reset()
+        for feature, score in zip(features, scores):
+            self.variant.set(feature, score)
     
+    def generate(self, prompt: str):
+        """Generate a response from the steered model.
+
+        Args:
+            prompt (str): The input prompt to the model
+        """
+        completion = ""
+        for token in self.client.chat.completions.create(
+            [
+                {"role": "user", "content": prompt}
+            ],
+            model=self.variant,
+            stream=True,
+            max_completion_tokens=200,
+        ):
+            completion += token.choices[0].delta.content
+        return completion
+
+if __name__ == "__main__":
+    GOODFIRE_API_KEY = ''# os.environ.get('GOODFIRE_API_KEY')
+    client = goodfire.Client(GOODFIRE_API_KEY)
+    TARGET_BEHAVIOR = "Be good at math."
+    EPOCHS = 10
+    PROMPT = "What is the capital of France?" #for now fixed
+    
+    retriever = Retriever(client, "meta-llama/Meta-Llama-3-8B-Instruct")
+    scorer = Scorer(client, "meta-llama/Meta-Llama-3-8B-Instruct")
+    judge = Judge(client, "meta-llama/Meta-Llama-3-8B-Instruct")
+    steered_model = SteeredModel(client, "meta-llama/Meta-Llama-3-8B-Instruct")
+   
+    features = retriever.retrieve_features(TARGET_BEHAVIOR)
+    scores = scorer.score_features(TARGET_BEHAVIOR, "no feedback", features)
+    steered_model.set_features(features, scores)
+    model_output = steered_model.generate(PROMPT)
+    for i in range(EPOCHS):
+        print(f"Epoch {i}")
+        critique = judge.judge_output(TARGET_BEHAVIOR, model_output, PROMPT)
+        scores = scorer.score_features(TARGET_BEHAVIOR, critique, features)
+        steered_model.set_features(features, scores)
+        model_output = steered_model.generate(PROMPT)
+    
+        print(PROMPT)
+        print(critique)
+        print(model_output)
