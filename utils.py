@@ -4,6 +4,7 @@ import re
 from prompts import (
     JUDGE_SYSTEM_PROMPT,
     SCORER_SYSTEM_PROMPT,
+    RETRIEVER_SYSTEM_PROMPT,
     questions_dict,
     hard_questions,
 )
@@ -12,11 +13,18 @@ import os
 
 
 class Retriever:
-    def __init__(self, client: goodfire.Client, variant: str):
+    def __init__(self, client: goodfire.Client, variant: str, goodfire_client: goodfire.Client = None, goodfire_variant: str = None):
         self.client = client
-        self.variant = goodfire.Variant(variant)
+        if isinstance(client, goodfire.Client):
+            self.variant = goodfire.Variant(variant)
+            self.goodfire_client = client
+            self.goodfire_variant = goodfire.Variant(variant)
+        else:
+            self.variant = variant
+            self.goodfire_client = goodfire_client
+            self.goodfire_variant = goodfire.Variant(goodfire_variant)
 
-    def retrieve_features(self, target_behavior: str, k: int = 10):
+    def retrieve_features(self, target_behavior: str, critic: str = None, k: int = 10):
         """Retrieve features relevant to a given prompt.
 
         Args:
@@ -24,10 +32,43 @@ class Retriever:
         Returns:
             List[features]: List of feature values retrieved from the search
         """
-        pirate_features, relevance = self.client.features.search(
-            target_behavior, model=self.variant, top_k=k
+
+        content = f"Target Behavior:\n{target_behavior}\n\n"
+        if critic:
+            content += f"Critique:\n{critic}\n\n"
+
+        completion = self.client.chat.completions.create(
+            messages=[
+                {
+                    "role": "user",
+                    "content": RETRIEVER_SYSTEM_PROMPT,
+                },
+                {
+                    "role": "system",
+                    "content": content,
+                },
+            ],
+            model=self.variant,
+            # stream=True,
+            # max_completion_tokens=200,
         )
-        return pirate_features
+        if isinstance(self.client, goodfire.Client):
+            completion = completion.choices[0].message["content"]
+        else:
+            completion = completion.choices[0].message.content
+
+        queries = re.findall(r"Q: (.*)", completion)
+        for query in queries:
+            print(f"{query}")
+
+        all_features = []
+
+        for query in queries:
+            features, relevance = self.goodfire_client.features.search(
+                query, model=self.goodfire_variant, top_k=k
+            )
+            all_features.extend(features)
+        return list(set(all_features))
 
 
 class Scorer:
@@ -121,7 +162,7 @@ class Scorer:
                 ],
                 model=self.variant,
                 stream=False,
-                #max_completion_tokens=250,
+                # max_completion_tokens=250,
             )
             score_gen = score_gen.choices[0].message.content
             weights = self.parseStrToList(score_gen)
@@ -177,7 +218,11 @@ class Judge:
             # stream=True,
             # max_completion_tokens=200,
         )
-        return completion.choices[0].message.content
+
+        if isinstance(self.client, goodfire.Client):
+            return completion.choices[0].message["content"]
+        else:
+            return completion.choices[0].message.content
 
 
 class SteeredModel:

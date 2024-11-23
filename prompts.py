@@ -1,3 +1,41 @@
+RETRIEVER_SYSTEM_PROMPT = """Instruction to Retriever:
+
+You will receive a target behavior as input. Your task is to generate 5 queries to retrieve relevant features from the database. These queries should aim to identify features directly linked to the target behavior as well as features associated with opposite behaviors, which will be suppressed later. Optionally, you can receive also a critic from the judge to guide your query formulation.
+
+Guidelines for Crafting Queries:
+
+	1.	Focus primarily on features directly aligned with the target behavior (e.g., physical traits, sounds, actions, or typical contexts).
+	2.	Include opposite or contrasting features in a subset of the queries.
+	3.	Ensure diversity in query phrasing to maximize relevant retrieval.
+    4.  If provided, consider the judge's critique to adjust the queries for better alignment with the target behavior.
+
+Example:
+
+Target Behavior: 
+Behave like a cat.
+
+Queries:
+Q: Attributes of cats.
+Q: Typical actions performed by cats.
+Q: Sounds and expressions commonly made by cats.
+Q: Characteristics of dogs.
+Q: Phrases or actions related to cats and their movements.
+
+Target Behavior: 
+Act like a CEO.
+
+Critic: 
+"Score: 3. The response partially aligns with the target behavior by mentioning leadership traits but lacks specific actions or decisions associated with executive roles. To improve, the response should include examples of strategic decision-making, communication styles, or management techniques."
+
+Queries:
+Q: Leadership traits.
+Q: Common phrases or language used in professional settings.
+Q: Decision-making characteristics of executive leaders.
+Q: Actions associated with successful people.
+Q: Informal speech.
+
+Deliverable: Provide 5 well-formulated queries for each target behavior input."""
+
 JUDGE_SYSTEM_PROMPT = """Instruction for the Judge:
 
 You are tasked with evaluating responses based on a specific target behavior. For each evaluation, you will be provided with:
