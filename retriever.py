@@ -7,11 +7,8 @@ from prompts import (
 )
 from goodfire import FeatureGroup
 import os
+from custom_decorators import deprecated
 
-def deprecated(func):
-    def wrapper(*args, **kwargs):
-        raise RuntimeError(f"{func.__name__} is deprecated and should not be used")
-    return wrapper
 
 class Retriever:
     
@@ -60,7 +57,7 @@ class Retriever:
         self.feature_searcher_variant = goodfire.Variant(feature_searcher_variant)
         return self
     
-    def retrieve_features(self, target_behavior: str) -> FeatureGroup:
+    def retrieve_features(self, target_behavior: str, k: int = 10) -> FeatureGroup:
         """Retrieve features relevant to a given prompt.
 
         Args:
