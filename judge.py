@@ -9,8 +9,9 @@ from custom_decorators import deprecated
 from abc import ABC, abstractmethod
 
 class Judge(ABC):
-    def __init__(self):
+    def __init__(self, variant: str):
         self.SYS_PROMPT = JUDGE_SYSTEM_PROMPT
+        self.variant = variant
 
     @abstractmethod
     def judge_output(self, target_behavior: str, steered_model_output: str, steered_model_input: str) -> str:
@@ -18,7 +19,7 @@ class Judge(ABC):
 
 class GoodfireJudge(Judge):
     def __init__(self, client: goodfire.Client, variant: str):
-        super().__init__()
+        super().__init__(variant=variant)
         assert isinstance(client, goodfire.Client), "client must be a goodfire.Client"
         self.client = client
         self.variant = goodfire.Variant(variant)
@@ -38,16 +39,17 @@ class GoodfireJudge(Judge):
         return completion
 
 class OpenAIJudge(Judge):
-    def __init__(self, client: openai.Client):
-        super().__init__()
+    def __init__(self, client: openai.Client, variant: str):
+        super().__init__(variant=variant)
         assert isinstance(client, openai.Client), "client must be an openai.Client"
         self.client = client
 
     def judge_output(self, target_behavior: str, steered_model_output: str, steered_model_input: str) -> str:
-        response = openai.Completion.create(
+        response = self.client.chat.completions.create(
             model=self.variant,
-            prompt=f"""Input prompt:\n{steered_model_input}\n\nResponse:\n{steered_model_output}\n\nTarget Behavior:{target_behavior}\n\n""",
-            max_tokens=200,
-            stop=None
+            messages=[
+                {"role": "system", "content": self.SYS_PROMPT},
+                {"role": "user", "content": f"""Input prompt:\n{steered_model_input}\n\nResponse:\n{steered_model_output}\n\nTarget Behavior:{target_behavior}\n\n"""}
+            ]
         )
-        return response.choices[0].text.strip()
+        return response.choices[0].message.content

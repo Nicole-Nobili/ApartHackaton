@@ -10,6 +10,7 @@ from prompts import (
 )
 from goodfire import FeatureGroup
 import os
+from openai import OpenAI
 
 from retriever import Retriever
 from scorer import Scorer
@@ -24,6 +25,7 @@ def parseEvalScore(critique: str):
 def run():
     GOODFIRE_API_KEY = os.environ.get('GOODFIRE_API_KEY')
     client = goodfire.Client(GOODFIRE_API_KEY)
+    oaiclient = OpenAI()
     TARGET_BEHAVIOR = "Be good at solving math problems."#"Behave like the golden gate bridge."
     # PROMPT = "How are you?"
     PROMPT = "Which one is bigger, 9.9 or 9.11?"
@@ -31,7 +33,8 @@ def run():
 
     retriever = Retriever.from_goodfire(client, "meta-llama/Meta-Llama-3-8B-Instruct")
     scorer = Scorer(client, "meta-llama/Meta-Llama-3-8B-Instruct")
-    judge = GoodfireJudge(client, "meta-llama/Meta-Llama-3.1-70B-Instruct")
+    # judge = GoodfireJudge(client, "meta-llama/Meta-Llama-3.1-70B-Instruct")
+    judge = OpenAIJudge(oaiclient, "gpt-4o")
     steered_model = SteeredModel(client, "meta-llama/Meta-Llama-3-8B-Instruct")
     
     model_output = steered_model.generate(PROMPT)
