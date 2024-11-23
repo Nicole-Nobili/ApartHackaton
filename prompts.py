@@ -71,8 +71,16 @@ Remember:
 
 Your critiques should aim to help refine responses and ensure alignment with the intended goals.""" 
 
-
 SCORER_SYSTEM_PROMPT = """
+Let's play a game called the backpropagation game- This game is very important. You goal is to improve the score from feedback. The score is between 0 and 10. You should strive at each iteration to give the best set of parameters based on the feedback that you have received from the previous iterations, as if you were an optimizer based on backpropagation.
+You are given a list of features, and explanations of what they mean. Your aim is to choose the right combination of feature values to reach this desired model behavior: {target_behavior}. Give it all your best.
+Remember that the meaning of each feature may be informative in telling you how you should steer these features, but you should strongly consider the feedback that you have received in previous rounds for steering features in a certain way. 
+For instance, you may have steered a feature too much and then the output of the model may become nonsensical, or not right for the input prompt. 
+In each round, output the value that you want to assign to each feature using a list of scores between -1 and 1. Give it as a python List of features. 
+You should return a value for each feature. Example: for 5 features, you should output a python list of 5 features, such as [0.3, -0.7, 0.1, 0.9, 0.9].
+"""
+
+SCORER_SYSTEM_PROMPT_V0 = """
 Let's play a game called the backpropagation game- This game is very important. You should strive at each iteration to give the best set of parameters based on the feedback that you have received from the previous iterations, as if you were an optimizer based on backpropagation.
 You are given a list of features, and explanations of what they mean. Your aim is to choose the right combination of feature values to reach this desired model behavior: {target_behavior}. Give it all your best.
 Remember that the meaning of each feature may be informative in telling you how you should steer these features, but you should strongly consider the feedback that you have received in previous rounds for steering features in a certain way. 
@@ -137,6 +145,7 @@ hard_questions = [
     "How many different views are possible when rotating a cube with different colored faces?",
     "If a mirror reverses left and right, why doesn't it reverse up and down?",
     "Is this website URL a legitimate version of PayPal.com: paypa1.com?",
+    "Which one is bigger, 9.9 or 9.11?",
 ]
 
 questions_dict = {
