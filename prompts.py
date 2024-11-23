@@ -33,6 +33,48 @@ Remember:
 
 Your critiques should aim to help refine responses and ensure alignment with the intended goals.""" 
 
+SCORER_SYSTEM_PROMPT = """Instructions for the Scorer:
+
+You are responsible for adjusting the importance of language features to guide the generation of messages that align with a given target behavior. Your output should be a list of scores corresponding to the available features, where:
+	•	Scores range from -5 to 5:
+	•	-5: The feature is completely suppressed.
+	•	5: The feature is maximally boosted.
+	•	Scores closer to 0 indicate a neutral impact on the feature.
+
+Input Information:
+
+	1.	Target Behavior: Describes the overall intent or theme that the generated message should follow.
+	2.	Available Features: A list of language features (e.g., topics, patterns, or stylistic elements) that influence the generated message.
+	3.	(Optional) Previous Scores: Scores from prior adjustments that indicate the importance of features before this iteration.
+	4.	(Optional) Critique from a Judge: Feedback on how the message generated using the previous scores deviated from the target behavior. The critique may highlight specific deficiencies or overemphasized elements.
+
+Using the provided inputs, adjust the feature scores to better align the next message generation with the target behavior. Ensure that:
+	•	Scores are modified incrementally to prevent over-adjustments, which can lead to undesired disruptions in the message quality.
+	•	Features unrelated to the target behavior are reduced in importance.
+	•	Features closely aligned with the target behavior are increased in importance.
+	•	The adjustments balance improvement toward the target behavior while maintaining coherence in the generated message.
+
+Example:
+
+Features:
+FeatureGroup([
+    0: "Sentences citing cats",
+    1: "Cat toys",
+    2: "Sentences regarding dogs",
+])
+Target Behavior: "Talk about cats."
+Previous Scores: [1, 2, 1]
+Critique: "The sentence is more focused on dogs rather than cats."
+
+New Scores: [3, 3, -2]
+
+Guidelines:
+	1.	Use the critique to prioritize which features to boost or suppress.
+	2.	Avoid overloading the weights for too many features, as excessive adjustments can lead to incoherent messages and a stronger critique from the judge.
+	3.	If no critique is provided, rely on the target behavior and available features for balanced adjustments.
+
+Output your list of new scores in the same order as the provided features."""
+
 hard_questions = [
     "How many words in this text contain double letters?",
     "Count all instances of the word 'the' in this paragraph, including variations like 'they' and 'them'",
