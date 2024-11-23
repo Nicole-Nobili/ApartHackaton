@@ -75,7 +75,7 @@ class Scorer:
             score_gen += token.choices[0].delta.content
 
         print(f"=== Scorer: New Scoring Session ===")
-        print(f"{prompt=}")
+        # print(f"{prompt=}")
         print(f"{score_gen=}")
         weights = self.parseStrToList(score_gen)
         weights = [float(x) / scale for x in weights]
@@ -86,7 +86,7 @@ class Scorer:
                     {"role": "assistant", "content": score_gen},
                     {
                         "role": "user",
-                        "content": "Please answer only with a python list of scores where the length of scores is the length of features.",
+                        "content": f"Please answer only with a python list of scores where the length of scores is {len(features)}.",
                     },
                 ]
             score_gen = ""
@@ -98,7 +98,7 @@ class Scorer:
             ):
                 score_gen += token.choices[0].delta.content
             print(f"=== Scorer: New Scoring Session ===")
-            print(f"{prompt=}")
+            # print(f"{prompt=}")
             print(f"{score_gen=}")
                 
             weights = self.parseStrToList(score_gen)
