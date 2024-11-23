@@ -24,14 +24,14 @@ def parseEvalScore(critique: str):
 def run():
     GOODFIRE_API_KEY = "sk-goodfire-tgwKZ-aupqofjOr1yMXrnALCT_CM86SpJkR12BGgYka5shI-35FYSA"  # os.environ.get('GOODFIRE_API_KEY')
     client = goodfire.Client(GOODFIRE_API_KEY)
-    TARGET_BEHAVIOR = "Behave like the golden gate bridge."
-    PROMPT = "How are you?"
-    # PROMPT = "Which one is bigger, 9.9 or 9.11?"
+    TARGET_BEHAVIOR = "Be good at solving math problems."#"Behave like the golden gate bridge."
+    # PROMPT = "How are you?"
+    PROMPT = "Which one is bigger, 9.9 or 9.11?"
     # "A train travels 120 km at 60 km/h, then 80 km at 40 km/h. What's the average speed?" #"Which one is bigger, 9.9 or 9.11?" #for now fixed
 
     retriever = Retriever.from_goodfire(client, "meta-llama/Meta-Llama-3-8B-Instruct")
     scorer = Scorer(client, "meta-llama/Meta-Llama-3-8B-Instruct")
-    judge = Judge.from_goodfire(client, "meta-llama/Meta-Llama-3-8B-Instruct")
+    judge = Judge.from_goodfire(client, "meta-llama/Meta-Llama-3.1-70B-Instruct")
     steered_model = SteeredModel(client, "meta-llama/Meta-Llama-3-8B-Instruct")
     
     model_output = steered_model.generate(PROMPT)
@@ -51,7 +51,8 @@ def run():
         return
 
     critique = ""
-    features = retriever.retrieve_features(TARGET_BEHAVIOR)
+    features = retriever.retrieve_features(TARGET_BEHAVIOR, k=5)
+    print(f"{features=}")
     scores = scorer.score_features(TARGET_BEHAVIOR, critique, features, [])
     steered_model.set_features(features, scores)
     model_output = steered_model.generate(PROMPT)

@@ -61,7 +61,7 @@ class Scorer:
 
         prompt = [
             {"role": "system", "content": self.SYS_PROMPT},
-
+            {"role": "user", "content": f"Features:\n{str(features)}\n\n"},
         ]
         prompt += self.accumulated_prompts
         
@@ -81,21 +81,25 @@ class Scorer:
         weights = [float(x) / scale for x in weights]
 
         while len(weights) != len(features):
-            print(f"Length of scores does not match length of features. {weights}")
-            for token in self.client.chat.completions.create(
-                messages=prompt
-                + [
+            print(f"Length of scores does not match length of features. {weights} {len(features)=}")
+            prompt += [
                     {"role": "assistant", "content": score_gen},
                     {
                         "role": "user",
                         "content": "Please answer only with a python list of scores where the length of scores is the length of features.",
                     },
-                ], 
+                ]
+            score_gen = ""
+            for token in self.client.chat.completions.create(
+                messages=prompt, 
                 model=self.variant,
                 stream=True,
                 max_completion_tokens=50,
             ):
                 score_gen += token.choices[0].delta.content
+            print(f"=== Scorer: New Scoring Session ===")
+            print(f"{prompt=}")
+            print(f"{score_gen=}")
                 
             weights = self.parseStrToList(score_gen)
             weights = [float(x) / scale for x in weights]
