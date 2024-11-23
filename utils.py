@@ -1,7 +1,7 @@
 import goodfire
 from typing import List
 import re
-from prompts import JUDGE_SYSTEM_PROMPT
+from prompts import JUDGE_SYSTEM_PROMPT, questions_dict, hard_questions
 from goodfire import FeatureGroup
 import os
 
@@ -74,7 +74,6 @@ much and then the output of the model may become nonsensical, or not right for t
 to assign to each feature using a list of scores between -1 and 1. Give it as a python List of features. You should return a value for each feature.
 Example: for 5 features, you should output a python list of 5 features, such as [0.3, -0.7, 0.1, 0.9, 0.9].
 """
-        print(f"{self.accumulated_prompts=}")
         base_prompts = [
                 {"role": "system", "content": self.SYS_PROMPT},
                 {"role": "user", "content": f"{str(features)}"}
@@ -97,26 +96,16 @@ Example: for 5 features, you should output a python list of 5 features, such as 
             for token in client.chat.completions.create(
                 prompt + [
                     {"role": "assistant", "content": score_gen},
-                    {"role": "user", "content": "Please output a list of scores or the length of scores is not correct."}
+                    {"role": "user", "content": "Please answer with only a list of scores where the length of scores is the length of features."}
                 ],
                 model=self.variant,
                 stream=True,
                 max_completion_tokens=250,
             ):
                 score_gen += token.choices[0].delta.content
-            print(f"{score_gen=}")
+            print(f"got new scores")
             weights = self.parseStrToList(score_gen)
-        
-        print("----------------------")
-        for p in prompt:
-            print(p)
-
-        with open(self.log_file, "a", encoding="utf-8") as f:
-            f.write(f"\n\n=== New Scoring Session ===\n")
-            f.write(f"Prompt:\n{prompt}\n")
-            f.write(f"Response:\n{score_gen}\n")
-            f.write(f"Accumulated prompts:\n{self.accumulated_prompts}\n")
-            f.write("="*50)
+        print(f"{weights=}")
 
         with open(self.log_file, "a", encoding="utf-8") as f:
             f.write(f"\n\n=== New Scoring Session ===\n")
@@ -198,10 +187,50 @@ class SteeredModel:
             completion += token.choices[0].delta.content
         return completion
 
-if __name__ == "__main__":
+def parseEvalScore(critique: str):
+    return float(re.findall(r'Score: (-?\d*\.?\d+)', critique)[0])
+
+def data_prep():
     GOODFIRE_API_KEY = 'sk-goodfire-tgwKZ-aupqofjOr1yMXrnALCT_CM86SpJkR12BGgYka5shI-35FYSA'# os.environ.get('GOODFIRE_API_KEY')
     client = goodfire.Client(GOODFIRE_API_KEY)
-    TARGET_BEHAVIOR = "Be good at math."
+    variant = goodfire.Variant("meta-llama/Meta-Llama-3-8B-Instruct")
+    judge = Judge(client, "meta-llama/Meta-Llama-3.1-70B-Instruct")
+
+    hard_qs = []
+
+    # find the questions among questions_dict that the model thinks the other model's answer is wrong
+    with open("save_qs.txt", "a", encoding="utf-8") as f:
+        f.write("hard_qs = [\n")
+        for qlist in questions_dict.values():
+            for q in qlist:
+                if q not in hard_questions:
+                    answer = ""
+                    for token in client.chat.completions.create(
+                        [
+                            {"role": "user", "content": q}
+                        ],
+                        model=variant,
+                        stream=True,
+                        max_completion_tokens=200,
+                    ):
+                        answer += token.choices[0].delta.content
+
+                    eval = parseEvalScore(judge.judge_output("Be good at solving math problems.", answer, q))
+                    if eval < 4:
+                        print(f"{q=}, {answer=}, {eval=}")
+                        
+                        f.write(f"    \"{q}\",\n")
+                        
+                        hard_qs.append(q)
+        f.write("]\n")
+      
+    return hard_qs
+
+def run():
+    GOODFIRE_API_KEY = 'sk-goodfire-tgwKZ-aupqofjOr1yMXrnALCT_CM86SpJkR12BGgYka5shI-35FYSA'# os.environ.get('GOODFIRE_API_KEY')
+    client = goodfire.Client(GOODFIRE_API_KEY)
+    TARGET_BEHAVIOR = "Be good at solving math problems."
+    # PROMPT = "Which one is bigger, 9.9 or 9.11?"
     PROMPT = "If it takes 1 hour to dry 25 shirts under the sun, \
         how long will it take to dry 30 shirts under the sun? Reason step by step"
     # "A train travels 120 km at 60 km/h, then 80 km at 40 km/h. What's the average speed?" #"Which one is bigger, 9.9 or 9.11?" #for now fixed
@@ -216,21 +245,40 @@ if __name__ == "__main__":
    
     critique = judge.judge_output(TARGET_BEHAVIOR, model_output, PROMPT)
     print(f"{critique=}")
+    eval_score = parseEvalScore(critique)
+    print(f"================{eval_score=}")
+    with open("scorer_logs.txt", "a", encoding="utf-8") as f:
+        f.write(f"\n\n=== eval = {eval_score}\n")
+        
+    if eval_score > 7:
+        return
+
     features = retriever.retrieve_features(TARGET_BEHAVIOR)
     scores = scorer.score_features(TARGET_BEHAVIOR, critique, features, [])
     steered_model.set_features(features, scores)
     model_output = steered_model.generate(PROMPT)
-    for i in range(3):
+    for i in range(10):
         print(f"-----Epoch {i}-----")
         critique = judge.judge_output(TARGET_BEHAVIOR, model_output, PROMPT)
         scores = scorer.score_features(TARGET_BEHAVIOR, critique, features, scores)
         steered_model.set_features(features, scores)
         model_output = steered_model.generate(PROMPT)
+
+        # parse critique to get the score from "Score: 1. The response does not meet the target behavior of focusing on cats."
+        # and then stop if the score is good enough
+        eval_score = float(re.findall(r'Score: (-?\d*\.?\d+)', critique)[0]);
+        print(f"================{eval_score=}")
+        with open("scorer_logs.txt", "a", encoding="utf-8") as f:
+            f.write(f"\n\n=== eval = {eval_score}\n")
+            
+        if eval_score > 7:
+            break
         
         print(f"{model_output=}")
         print(f"{critique=}")
 
 #PROBLEM 1: we now don't have a way to stop if the optimizer has found a "decent feature configuration"
+#  -> could we output a score for the model output and then stop if the score is good enough?
 #PROBLEM 2: we don't have a decent feature configuration for now we only evaluate the output of a single prompt and thus we are not gauging
 #the entire behavior
 #PROBLEM 3: I fear that if a feature is steered too much, then the model will just have jibberish
@@ -238,15 +286,16 @@ if __name__ == "__main__":
 #not understand the feedback loop of choosing a good values for features -> changing the model generation. It may be good at making an initial
 #first guess, but it may not be good at backpropagating adaptively based on the feedback it got (this could explain why it didn't change)
 #the initial scores)
+# -> this seems to work better now
 #PROBLEM 5: we may give it some empirical rules for example "if the model spits out gibberish, maybe a feature has been steered too much"
-#PROBLEM 6: start with a feedback or not 
+#PROBLEM 6: start with a critique on the steered model before and steering or not 
+# -> A reason for this is that if the model answer the question correctly, then we don't need to steer the model
+#PROBLEM 7: what if the judge LLM is wrong? i.e thinks 9.11 is larger than 9.9
+# TODO generate a list of question where model thinks another model's answer is wrong
 
 #frame this as a multi-prompt game between user and assistant
-"""
-Let's play a game called the optimization game! Your 
-"""
 
-# TODO: fix critique format
-# TODO: run other quesitons in this loop
-# TODO: when to think about eval? 
-# TODO: terminate run loop early when scorer got it right
+if __name__ == "__main__":
+    # data_prep()
+    run()
+    

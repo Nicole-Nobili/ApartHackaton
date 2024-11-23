@@ -1,3 +1,4 @@
 constants.py
 __pycache__/*
 scorer_logs.txt
+save_qs.txt
