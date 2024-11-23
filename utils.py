@@ -278,7 +278,7 @@ def run():
         print(f"{critique=}")
 
 #PROBLEM 1: we now don't have a way to stop if the optimizer has found a "decent feature configuration"
-#  -> could we output a score for the model output and then stop if the score is good enough?
+#  -> this is fixed now
 #PROBLEM 2: we don't have a decent feature configuration for now we only evaluate the output of a single prompt and thus we are not gauging
 #the entire behavior
 #PROBLEM 3: I fear that if a feature is steered too much, then the model will just have jibberish
