@@ -31,6 +31,7 @@ class Scorer:
         self.client = client
         self.variant = goodfire.Variant(variant)
         self.accumulated_prompts = []
+        self.log_file = "scorer_logs.txt"
 
     def parseStrToList(self, score_gen: str):
         numbers = re.findall(r'-?\d*\.?\d+', score_gen)
@@ -79,9 +80,10 @@ Example: for 5 features, you should output a python list of 5 features, such as 
                 {"role": "user", "content": f"{str(features)}"}
             ]
         
+        prompt = base_prompts + self.accumulated_prompts
         score_gen = ""
         for token in client.chat.completions.create(
-            base_prompts + self.accumulated_prompts,
+            prompt,
             model=self.variant,
             stream=True,
             max_completion_tokens=50,
@@ -93,7 +95,7 @@ Example: for 5 features, you should output a python list of 5 features, such as 
         while len(weights) != len(features):
             score_gen = ""
             for token in client.chat.completions.create(
-                base_prompts + self.accumulated_prompts + [
+                prompt + [
                     {"role": "assistant", "content": score_gen},
                     {"role": "user", "content": "Please output a list of scores or the length of scores is not correct."}
                 ],
@@ -104,6 +106,17 @@ Example: for 5 features, you should output a python list of 5 features, such as 
                 score_gen += token.choices[0].delta.content
             print(f"{score_gen=}")
             weights = self.parseStrToList(score_gen)
+        
+        print("----------------------")
+        for p in prompt:
+            print(p)
+
+        with open(self.log_file, "a", encoding="utf-8") as f:
+            f.write(f"\n\n=== New Scoring Session ===\n")
+            f.write(f"Prompt:\n{prompt}\n")
+            f.write(f"Response:\n{score_gen}\n")
+            f.write(f"Accumulated prompts:\n{self.accumulated_prompts}\n")
+            f.write("="*50)
 
         return weights
 
@@ -199,7 +212,7 @@ if __name__ == "__main__":
     scores = scorer.score_features(TARGET_BEHAVIOR, critique, features, [])
     steered_model.set_features(features, scores)
     model_output = steered_model.generate(PROMPT)
-    for i in range(10):
+    for i in range(3):
         print(f"-----Epoch {i}-----")
         critique = judge.judge_output(TARGET_BEHAVIOR, model_output, PROMPT)
         scores = scorer.score_features(TARGET_BEHAVIOR, critique, features, scores)
