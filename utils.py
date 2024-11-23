@@ -248,6 +248,9 @@ def run():
     eval_score = parseEvalScore(critique)
     print(f"================{eval_score=}")
     with open("scorer_logs.txt", "a", encoding="utf-8") as f:
+        f.write(f"{PROMPT=}")
+        f.write(f"{model_output=}")
+        f.write(f"{critique=}")
         f.write(f"\n\n=== eval = {eval_score}\n")
         
     if eval_score > 7:
@@ -269,6 +272,9 @@ def run():
         eval_score = float(re.findall(r'Score: (-?\d*\.?\d+)', critique)[0]);
         print(f"================{eval_score=}")
         with open("scorer_logs.txt", "a", encoding="utf-8") as f:
+            f.write(f"-----Epoch {i}-----")
+            f.write(f"{model_output=}")
+            f.write(f"{critique=}")
             f.write(f"\n\n=== eval = {eval_score}\n")
             
         if eval_score > 7:
@@ -298,4 +304,5 @@ def run():
 if __name__ == "__main__":
     # data_prep()
     run()
+
     

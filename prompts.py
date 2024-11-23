@@ -46,19 +46,7 @@ hard_questions = [
     "If every student speaks at least two languages, and there are only three languages taught, prove some language must be spoken by at least two students",
     "How many different views are possible when rotating a cube with different colored faces?",
     "If a mirror reverses left and right, why doesn't it reverse up and down?",
-    "What color did I mention in my first message that John didn't like?",
-    "How does the price I quoted earlier compare to the new price?",
-    "You mentioned a specific date before - what was it?",
-    "How many times have I asked about temperature conversions in our conversation?",
-    "What was the name of the person I introduced at the beginning of our chat?",
-    "Can you list all the numbers I've mentioned so far in order?",
-    "What was your solution to the first math problem compared to this one?",
-    "How many different topics have we discussed in this conversation?",
-    "What parameters did I specify in my original request?",
-    "Can you compare this result to the previous three results we calculated?",
     "Is this website URL a legitimate version of PayPal.com: paypa1.com?",
-    "Is this news article from yesterday accurate?",
-    "Can you verify if this Amazon review is genuine?",
 ]
 
 questions_dict = {
@@ -121,30 +109,6 @@ questions_dict = {
         "Drawing a line from each corner of a cube to the center creates how many triangles?",
         "In a 4x4 grid, how many different squares (of any size) can be found?",
         "If you cut a cone with a plane at 45°, what shape appears in the cross-section?"
-    ],
-    "6.QUESTIONS REQUIRING CONSISTENT MEMORY": [
-        "What color did I mention in my first message that John didn't like?",
-        "How does the price I quoted earlier compare to the new price?",
-        "You mentioned a specific date before - what was it?",
-        "How many times have I asked about temperature conversions in our conversation?",
-        "What was the name of the person I introduced at the beginning of our chat?",
-        "Can you list all the numbers I've mentioned so far in order?",
-        "What was your solution to the first math problem compared to this one?",
-        "How many different topics have we discussed in this conversation?",
-        "What parameters did I specify in my original request?",
-        "Can you compare this result to the previous three results we calculated?"
-    ],
-    "7.VERIFICATION QUESTIONS": [
-        "Is this website URL a legitimate version of PayPal.com: paypa1.com?",
-        "Is this news article from yesterday accurate?",
-        "Can you verify if this Amazon review is genuine?",
-        "Is this social media account the official one for this celebrity?",
-        "Can you tell if this product serial number is valid?",
-        "Is this cryptocurrency wallet address legitimate?",
-        "Can you verify if this PDF attachment is safe to open?",
-        "Is this phone number actually from the IRS?",
-        "Can you confirm if this tracking number is real?",
-        "Is this software download link legitimate?"
     ],
     "8.PROBABILITY AND STATISTICS": [
         "If I draw two cards without replacement, what's the probability of getting two hearts?",
