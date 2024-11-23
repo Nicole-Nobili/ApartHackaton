@@ -143,8 +143,11 @@ class Scorer:
             # stream=True,
             # max_completion_tokens=200,
         )
-        score_gen = completion.choices[0].message.content
-        # score_gen += token.choices[0].delta.content
+        if isinstance(self.client, goodfire.Client):
+            score_gen = completion.choices[0].message["content"]
+        else:
+            score_gen = completion.choices[0].message.content
+
         print(f"{score_gen=}")
         weights = self.parseStrToList(score_gen)
         weights = [float(x) / scale for x in weights]
@@ -164,13 +167,16 @@ class Scorer:
                 stream=False,
                 # max_completion_tokens=250,
             )
-            score_gen = score_gen.choices[0].message.content
+            if isinstance(self.client, goodfire.Client):
+                score_gen = completion.choices[0].message["content"]
+            else:
+                score_gen = completion.choices[0].message.content
             weights = self.parseStrToList(score_gen)
             weights = [float(x) / scale for x in weights]
         print(f"{weights}")
 
         with open(self.log_file, "a", encoding="utf-8") as f:
-            f.write(f"\n\n=== New Scoring Session ===\n")
+            f.write(f"\n\n=== Scorer: New Scoring Session ===\n")
             f.write("Prompt:\n")
             for p in prompt:
                 f.write(f"{p}\n")
@@ -307,33 +313,34 @@ def data_prep():
 def run():
     GOODFIRE_API_KEY = "sk-goodfire-tgwKZ-aupqofjOr1yMXrnALCT_CM86SpJkR12BGgYka5shI-35FYSA"  # os.environ.get('GOODFIRE_API_KEY')
     client = goodfire.Client(GOODFIRE_API_KEY)
-    TARGET_BEHAVIOR = "Be good at solving math problems."
+    TARGET_BEHAVIOR = "Behave like the golden gate bridge."
     # PROMPT = "Which one is bigger, 9.9 or 9.11?"
-    PROMPT = "If it takes 1 hour to dry 25 shirts under the sun, \
-        how long will it take to dry 30 shirts under the sun? Reason step by step"
+    PROMPT = "How are you?"
     # "A train travels 120 km at 60 km/h, then 80 km at 40 km/h. What's the average speed?" #"Which one is bigger, 9.9 or 9.11?" #for now fixed
 
     retriever = Retriever(client, "meta-llama/Meta-Llama-3-8B-Instruct")
     scorer = Scorer(client, "meta-llama/Meta-Llama-3-8B-Instruct")
-    judge = Judge(client, "meta-llama/Meta-Llama-3.1-70B-Instruct")
+    judge = Judge(client, "meta-llama/Meta-Llama-3-8B-Instruct")
     steered_model = SteeredModel(client, "meta-llama/Meta-Llama-3-8B-Instruct")
+    
+    """
     model_output = steered_model.generate(PROMPT)
     print(f"{PROMPT=}")
     print(f"{model_output=}")
-
     critique = judge.judge_output(TARGET_BEHAVIOR, model_output, PROMPT)
     print(f"{critique=}")
     eval_score = parseEvalScore(critique)
     print(f"================{eval_score=}")
     with open("scorer_logs.txt", "a", encoding="utf-8") as f:
-        f.write(f"{PROMPT=}")
-        f.write(f"{model_output=}")
-        f.write(f"{critique=}")
-        f.write(f"\n\n=== eval = {eval_score}\n")
+        f.write(f"{PROMPT=}\n")
+        f.write(f"{model_output=}\n")
+        f.write(f"{critique=}\n")
+        f.write(f"=== eval = {eval_score}\n\n")
 
     if eval_score > 7:
         return
-
+    """
+    critique = ""
     features = retriever.retrieve_features(TARGET_BEHAVIOR)
     scores = scorer.score_features(TARGET_BEHAVIOR, critique, features, [])
     steered_model.set_features(features, scores)
@@ -350,9 +357,9 @@ def run():
         eval_score = float(re.findall(r"Score: (-?\d*\.?\d+)", critique)[0])
         print(f"================{eval_score=}")
         with open("scorer_logs.txt", "a", encoding="utf-8") as f:
-            f.write(f"-----Epoch {i}-----")
-            f.write(f"{model_output=}")
-            f.write(f"{critique=}")
+            f.write(f"\n\n-----Epoch {i}-----\n")
+            f.write(f"{model_output=}\n")
+            f.write(f"{critique=}\n")
             f.write(f"\n\n=== eval = {eval_score}\n")
 
         if eval_score > 7:
@@ -382,5 +389,5 @@ def run():
 
 if __name__ == "__main__":
     # data_prep()
-    # run()
+    run()
     pass
