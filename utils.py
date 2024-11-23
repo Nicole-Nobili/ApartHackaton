@@ -30,13 +30,13 @@ class Scorer:
     def __init__(self, client: goodfire.Client, variant: str):
         self.client = client
         self.variant = goodfire.Variant(variant)
+        self.accumulated_prompts = []
 
     def parseStrToList(self, score_gen: str):
         numbers = re.findall(r'-?\d*\.?\d+', score_gen)
         weights = [float(x) for x in numbers]  # Convert strings to floats
         return weights
 
-    
     def score_features(self, target_behavior: str, critique: str, features, prev_scores):
         """Score a list of features to get their weights.
 
@@ -50,25 +50,38 @@ class Scorer:
             List[float]: Ordered list of feature weights between -1 and 1
         """
         
+
+        prev_scors_prompt = f"Your previous output scores are {prev_scores}" if len(prev_scores) > 0 else ""
+
         if (critique is None or len(critique) == 0):
-            critique = f"""Your previous output scores are {prev_scores}, and the feedback is {critique}, adjust the score to improve critique."""
+            critique = f"""The feedback is {critique}, adjust the score to improve critique."""
         else:
             critique = ""
+
+        if len(prev_scores) > 0 and len(critique) > 0:
+            self.accumulated_prompts.append({"role": "assistant", "content": str(prev_scores)})
+            self.accumulated_prompts.append({"role": "user", "content": critique})
+        
         self.SYS_PROMPT = f"""
-Instruction for the assistant:
-You are tasked with {target_behavior}
-{critique}
-Your role is to output a List of scores between -1 and 1 when given a python List of features. Two lists should have the same length.
-Example:
-    User: FeatureGroup([0: "The user is directing the model to modify or transform content", [1: "The model is being instructed how to answer",].\
-    System Response: [0.3, -0.7]
+Let's play a game called the backpropagation game- This game is very important. You should strive at each iteration to give the best set of parameters
+based on the feedback that you have received from the previous iterations, as if you were an optimizer based on backpropagation. 
+You are given a list of features, and explanations of what they mean. Your aim is to choose the right combination of feature values to reach this desired 
+model behavior: {target_behavior}. Give it all your best.
+Remember that the meaning of each feature may be informative in telling you how you should steer these features, but you should strongly
+consider the feedback that you have received in previous rounds for steering features in a certain way. For instance, you may have steered a feature too
+much and then the output of the model may become nonsensical, or not right for the input prompt. In each round, output the value that you want 
+to assign to each feature using a list of scores between -1 and 1. Give it as a python List of features. You should return a value for each feature.
+Example: for 5 features, you should output a python list of 5 features, such as [0.3, -0.7, 0.1, 0.9, 0.9].
 """
-        score_gen = ""
-        for token in client.chat.completions.create(
-            [
+        print(f"{self.accumulated_prompts=}")
+        base_prompts = [
                 {"role": "system", "content": self.SYS_PROMPT},
                 {"role": "user", "content": f"{str(features)}"}
-            ],
+            ]
+        
+        score_gen = ""
+        for token in client.chat.completions.create(
+            base_prompts + self.accumulated_prompts,
             model=self.variant,
             stream=True,
             max_completion_tokens=50,
@@ -76,17 +89,17 @@ Example:
             score_gen += token.choices[0].delta.content
         print(f"{score_gen=}")
         weights = self.parseStrToList(score_gen)
+        
         while len(weights) != len(features):
             score_gen = ""
             for token in client.chat.completions.create(
-                [
-                    {"role": "system", "content": self.SYS_PROMPT},
-                    {"role": "user", "content": f"You didn't give me score or \
-                        the score does not have right length, please give me a list of scores based on \{str(features)}"}
+                base_prompts + self.accumulated_prompts + [
+                    {"role": "assistant", "content": score_gen},
+                    {"role": "user", "content": "Please output a list of scores or the length of scores is not correct."}
                 ],
                 model=self.variant,
                 stream=True,
-                max_completion_tokens=50,
+                max_completion_tokens=250,
             ):
                 score_gen += token.choices[0].delta.content
             print(f"{score_gen=}")
@@ -165,30 +178,55 @@ class SteeredModel:
         return completion
 
 if __name__ == "__main__":
-    GOODFIRE_API_KEY = ''# os.environ.get('GOODFIRE_API_KEY')
+    GOODFIRE_API_KEY = 'sk-goodfire-tgwKZ-aupqofjOr1yMXrnALCT_CM86SpJkR12BGgYka5shI-35FYSA'# os.environ.get('GOODFIRE_API_KEY')
     client = goodfire.Client(GOODFIRE_API_KEY)
     TARGET_BEHAVIOR = "Be good at math."
-    EPOCHS = 10
-    PROMPT = "Which one is bigger, 9.9 or 9.11?" #for now fixed
+    PROMPT = "If it takes 1 hour to dry 25 shirts under the sun, \
+        how long will it take to dry 30 shirts under the sun? Reason step by step"
+    # "A train travels 120 km at 60 km/h, then 80 km at 40 km/h. What's the average speed?" #"Which one is bigger, 9.9 or 9.11?" #for now fixed
     
     retriever = Retriever(client, "meta-llama/Meta-Llama-3-8B-Instruct")
     scorer = Scorer(client, "meta-llama/Meta-Llama-3-8B-Instruct")
-    judge = Judge(client, "meta-llama/Meta-Llama-3-8B-Instruct")
+    judge = Judge(client, "meta-llama/Meta-Llama-3.1-70B-Instruct")
     steered_model = SteeredModel(client, "meta-llama/Meta-Llama-3-8B-Instruct")
     model_output = steered_model.generate(PROMPT)
+    print(f"{PROMPT=}")
     print(f"{model_output=}")
    
+    critique = judge.judge_output(TARGET_BEHAVIOR, model_output, PROMPT)
+    print(f"{critique=}")
     features = retriever.retrieve_features(TARGET_BEHAVIOR)
-    scores = scorer.score_features(TARGET_BEHAVIOR, "", features, [])
+    scores = scorer.score_features(TARGET_BEHAVIOR, critique, features, [])
     steered_model.set_features(features, scores)
     model_output = steered_model.generate(PROMPT)
-    for i in range(EPOCHS):
-        print(f"Epoch {i}")
+    for i in range(10):
+        print(f"-----Epoch {i}-----")
         critique = judge.judge_output(TARGET_BEHAVIOR, model_output, PROMPT)
         scores = scorer.score_features(TARGET_BEHAVIOR, critique, features, scores)
         steered_model.set_features(features, scores)
         model_output = steered_model.generate(PROMPT)
-    
-        print(f"{PROMPT=}")
+        
         print(f"{model_output=}")
         print(f"{critique=}")
+
+#PROBLEM 1: we now don't have a way to stop if the optimizer has found a "decent feature configuration"
+#PROBLEM 2: we don't have a decent feature configuration for now we only evaluate the output of a single prompt and thus we are not gauging
+#the entire behavior
+#PROBLEM 3: I fear that if a feature is steered too much, then the model will just have jibberish
+#PROBLEM 4: the optimizer now is not really doing gradient decent efficiently. It may suggest the same values for those features since it does
+#not understand the feedback loop of choosing a good values for features -> changing the model generation. It may be good at making an initial
+#first guess, but it may not be good at backpropagating adaptively based on the feedback it got (this could explain why it didn't change)
+#the initial scores)
+#PROBLEM 5: we may give it some empirical rules for example "if the model spits out gibberish, maybe a feature has been steered too much"
+#PROBLEM 6: start with a feedback or not 
+
+#frame this as a multi-prompt game between user and assistant
+"""
+Let's play a game called the optimization game! Your 
+"""
+
+# TODO: fix critique format
+# TODO: run other quesitons in this loop
+# TODO: when to think about eval? 
+# TODO: terminate run loop early when scorer got it right
+# TODO: 
