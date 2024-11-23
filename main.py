@@ -13,7 +13,7 @@ import os
 
 from retriever import Retriever
 from scorer import Scorer
-from judge import Judge
+from judge import GoodfireJudge, OpenAIJudge
 from steered_model import SteeredModel
 
 def parseEvalScore(critique: str):
@@ -22,7 +22,7 @@ def parseEvalScore(critique: str):
 
 
 def run():
-    GOODFIRE_API_KEY = "sk-goodfire-tgwKZ-aupqofjOr1yMXrnALCT_CM86SpJkR12BGgYka5shI-35FYSA"  # os.environ.get('GOODFIRE_API_KEY')
+    GOODFIRE_API_KEY = os.environ.get('GOODFIRE_API_KEY')
     client = goodfire.Client(GOODFIRE_API_KEY)
     TARGET_BEHAVIOR = "Be good at solving math problems."#"Behave like the golden gate bridge."
     # PROMPT = "How are you?"
@@ -31,7 +31,7 @@ def run():
 
     retriever = Retriever.from_goodfire(client, "meta-llama/Meta-Llama-3-8B-Instruct")
     scorer = Scorer(client, "meta-llama/Meta-Llama-3-8B-Instruct")
-    judge = Judge.from_goodfire(client, "meta-llama/Meta-Llama-3.1-70B-Instruct")
+    judge = GoodfireJudge(client, "meta-llama/Meta-Llama-3.1-70B-Instruct")
     steered_model = SteeredModel(client, "meta-llama/Meta-Llama-3-8B-Instruct")
     
     model_output = steered_model.generate(PROMPT)

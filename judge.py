@@ -18,7 +18,7 @@ class Judge(ABC):
 
 class GoodfireJudge(Judge):
     def __init__(self, client: goodfire.Client, variant: str):
-        super().__init__(variant)
+        super().__init__()
         assert isinstance(client, goodfire.Client), "client must be a goodfire.Client"
         self.client = client
         self.variant = goodfire.Variant(variant)
