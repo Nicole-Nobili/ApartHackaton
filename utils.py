@@ -54,7 +54,7 @@ class Scorer:
 
         prev_scors_prompt = f"Your previous output scores are {prev_scores}" if len(prev_scores) > 0 else ""
 
-        if (critique is None or len(critique) == 0):
+        if not (critique is None or len(critique) == 0):
             critique = f"""The feedback is {critique}, adjust the score to improve critique."""
         else:
             critique = ""
@@ -82,6 +82,7 @@ Example: for 5 features, you should output a python list of 5 features, such as 
         
         prompt = base_prompts + self.accumulated_prompts
         score_gen = ""
+        prompt = base_prompts + self.accumulated_prompts
         for token in client.chat.completions.create(
             prompt,
             model=self.variant,
@@ -91,7 +92,6 @@ Example: for 5 features, you should output a python list of 5 features, such as 
             score_gen += token.choices[0].delta.content
         print(f"{score_gen=}")
         weights = self.parseStrToList(score_gen)
-        
         while len(weights) != len(features):
             score_gen = ""
             for token in client.chat.completions.create(
@@ -116,6 +116,14 @@ Example: for 5 features, you should output a python list of 5 features, such as 
             f.write(f"Prompt:\n{prompt}\n")
             f.write(f"Response:\n{score_gen}\n")
             f.write(f"Accumulated prompts:\n{self.accumulated_prompts}\n")
+            f.write("="*50)
+
+        with open(self.log_file, "a", encoding="utf-8") as f:
+            f.write(f"\n\n=== New Scoring Session ===\n")
+            f.write("Prompt:\n")
+            for p in prompt:
+                f.write(f"{p}\n")
+            f.write(f"Response:\n{score_gen}\n")
             f.write("="*50)
 
         return weights
@@ -242,4 +250,3 @@ Let's play a game called the optimization game! Your
 # TODO: run other quesitons in this loop
 # TODO: when to think about eval? 
 # TODO: terminate run loop early when scorer got it right
-# TODO: 
