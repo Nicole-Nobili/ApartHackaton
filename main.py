@@ -103,12 +103,12 @@ if __name__ == "__main__":
     with concurrent.futures.ThreadPoolExecutor() as executor:
         target_behavior_type = "tailored to all questions"
         n = 5
+        futures = []
         for i, s in enumerate([JUDGE_SYSTEM_PROMPT, JUDGE_SYSTEM_PROMPT1]):
-            # check epoch_eval_dict to see if the num_features, target_behavior, prompt combo has been evaluated
-                # if n in epoch_eval_dict.keys():
-                #     if target_behavior_type in epoch_eval_dict[n].keys():
-                #         if q in epoch_eval_dict[n][target_behavior_type]:
-                #             continue
-            futures = [executor.submit(run, q, s, f"JUDGE_SYSTEM_PROMPT{i}", 5) for q in hard_questions]
-            for future in concurrent.futures.as_completed(futures):
-                future.result()
+            futures += [executor.submit(run, q, s, f"JUDGE_SYSTEM_PROMPT{i}", 5) for q in hard_questions]
+        for future in concurrent.futures.as_completed(futures):
+            future.result()
+    # # synchoronous
+    # for i, s in enumerate([JUDGE_SYSTEM_PROMPT, JUDGE_SYSTEM_PROMPT1]):
+    #     for q in hard_questions:
+    #         run(q, s, f"JUDGE_SYSTEM_PROMPT{i}", 5)
