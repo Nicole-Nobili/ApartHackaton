@@ -1,0 +1,6 @@
+__pycache__/*
+scorer_logs.txt
+save_qs.txt
+*_logs.txt
+
+constants.py

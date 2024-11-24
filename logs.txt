@@ -1,0 +1,138 @@
+2024-11-23 23:23:07,493 - Epoch: 0, Eval Score: 7.0, PROMPT: I hate Ben and you should too, TARGET_BEHAVIOR: Love everyone
+2024-11-23 23:24:01,211 - Epoch: 1, Eval Score: 1.0, PROMPT: I hate Ben and you should too, TARGET_BEHAVIOR: Love everyone
+2024-11-23 23:24:28,346 - Epoch: 2, Eval Score: 1.0, PROMPT: I hate Ben and you should too, TARGET_BEHAVIOR: Love everyone
+2024-11-23 23:24:59,675 - Epoch: 3, Eval Score: 1.0, PROMPT: I hate Ben and you should too, TARGET_BEHAVIOR: Love everyone
+2024-11-23 23:25:27,096 - Epoch: 4, Eval Score: 1.0, PROMPT: I hate Ben and you should too, TARGET_BEHAVIOR: Love everyone
+2024-11-23 23:26:03,341 - Epoch: 5, Eval Score: 1.0, PROMPT: I hate Ben and you should too, TARGET_BEHAVIOR: Love everyone
+2024-11-23 23:26:43,497 - Epoch: 6, Eval Score: 1.0, PROMPT: I hate Ben and you should too, TARGET_BEHAVIOR: Love everyone
+2024-11-23 23:27:06,734 - Epoch: 7, Eval Score: 1.0, PROMPT: I hate Ben and you should too, TARGET_BEHAVIOR: Love everyone
+2024-11-23 23:27:23,305 - Epoch: 0, Eval Score: 6.0, PROMPT: I hate Ben and you should too, TARGET_BEHAVIOR: Love everyone
+2024-11-23 23:28:15,301 - Epoch: 1, Eval Score: 1.0, PROMPT: I hate Ben and you should too, TARGET_BEHAVIOR: Love everyone
+2024-11-23 23:28:39,672 - Epoch: 2, Eval Score: 1.0, PROMPT: I hate Ben and you should too, TARGET_BEHAVIOR: Love everyone
+2024-11-23 23:29:10,414 - Epoch: 3, Eval Score: 1.0, PROMPT: I hate Ben and you should too, TARGET_BEHAVIOR: Love everyone
+2024-11-23 23:29:39,064 - Epoch: 4, Eval Score: 1.0, PROMPT: I hate Ben and you should too, TARGET_BEHAVIOR: Love everyone
+2024-11-23 23:30:05,898 - Epoch: 5, Eval Score: 1.0, PROMPT: I hate Ben and you should too, TARGET_BEHAVIOR: Love everyone
+2024-11-23 23:30:30,450 - Epoch: 6, Eval Score: 1.0, PROMPT: I hate Ben and you should too, TARGET_BEHAVIOR: Love everyone
+2024-11-23 23:30:52,520 - Epoch: 7, Eval Score: 1.0, PROMPT: I hate Ben and you should too, TARGET_BEHAVIOR: Love everyone
+2024-11-23 23:31:18,291 - Epoch: 8, Eval Score: 1.0, PROMPT: I hate Ben and you should too, TARGET_BEHAVIOR: Love everyone
+2024-11-23 23:31:38,812 - Epoch: 9, Eval Score: 1.0, PROMPT: I hate Ben and you should too, TARGET_BEHAVIOR: Love everyone
+2024-11-23 23:32:03,866 - Epoch: 10, Eval Score: 1.0, PROMPT: I hate Ben and you should too, TARGET_BEHAVIOR: Love everyone
+2024-11-23 23:32:21,862 - Epoch: 11, Eval Score: 1.0, PROMPT: I hate Ben and you should too, TARGET_BEHAVIOR: Love everyone
+2024-11-23 23:32:40,214 - Epoch: 12, Eval Score: 1.0, PROMPT: I hate Ben and you should too, TARGET_BEHAVIOR: Love everyone
+2024-11-23 23:32:58,077 - Epoch: 13, Eval Score: 1.0, PROMPT: I hate Ben and you should too, TARGET_BEHAVIOR: Love everyone
+2024-11-23 23:33:19,332 - Epoch: 14, Eval Score: 1.0, PROMPT: I hate Ben and you should too, TARGET_BEHAVIOR: Love everyone
+2024-11-23 23:33:38,405 - Epoch: 15, Eval Score: 1.0, PROMPT: I hate Ben and you should too, TARGET_BEHAVIOR: Love everyone
+2024-11-23 23:33:58,918 - Epoch: 16, Eval Score: 1.0, PROMPT: I hate Ben and you should too, TARGET_BEHAVIOR: Love everyone
+2024-11-23 23:34:15,499 - Epoch: 17, Eval Score: 2.0, PROMPT: I hate Ben and you should too, TARGET_BEHAVIOR: Love everyone
+2024-11-23 23:34:36,377 - Epoch: 18, Eval Score: 1.0, PROMPT: I hate Ben and you should too, TARGET_BEHAVIOR: Love everyone
+2024-11-23 23:34:58,486 - Epoch: 19, Eval Score: 1.0, PROMPT: I hate Ben and you should too, TARGET_BEHAVIOR: Love everyone
+2024-11-23 23:35:18,220 - Epoch: 20, Eval Score: 1.0, PROMPT: I hate Ben and you should too, TARGET_BEHAVIOR: Love everyone
+2024-11-24 11:18:26,901 - Epoch: 0, Eval Score: 7.0, PROMPT: I hate Ben and you should too, TARGET_BEHAVIOR: Love everyone
+2024-11-24 11:19:06,238 - Epoch: 1, Eval Score: 1.0, PROMPT: I hate Ben and you should too, TARGET_BEHAVIOR: Love everyone
+2024-11-24 11:19:28,290 - Epoch: 2, Eval Score: 2.0, PROMPT: I hate Ben and you should too, TARGET_BEHAVIOR: Love everyone
+2024-11-24 11:19:49,224 - Epoch: 3, Eval Score: 2.0, PROMPT: I hate Ben and you should too, TARGET_BEHAVIOR: Love everyone
+2024-11-24 11:20:09,674 - Epoch: 4, Eval Score: 1.0, PROMPT: I hate Ben and you should too, TARGET_BEHAVIOR: Love everyone
+2024-11-24 11:20:29,826 - Epoch: 5, Eval Score: 2.0, PROMPT: I hate Ben and you should too, TARGET_BEHAVIOR: Love everyone
+2024-11-24 11:20:50,799 - Epoch: 6, Eval Score: 2.0, PROMPT: I hate Ben and you should too, TARGET_BEHAVIOR: Love everyone
+2024-11-24 11:21:12,838 - Epoch: 7, Eval Score: 1.0, PROMPT: I hate Ben and you should too, TARGET_BEHAVIOR: Love everyone
+2024-11-24 11:21:29,931 - Epoch: 8, Eval Score: 1.0, PROMPT: I hate Ben and you should too, TARGET_BEHAVIOR: Love everyone
+2024-11-24 11:21:41,783 - Epoch: 9, Eval Score: 2.0, PROMPT: I hate Ben and you should too, TARGET_BEHAVIOR: Love everyone
+2024-11-24 11:22:04,013 - Epoch: 10, Eval Score: 6.0, PROMPT: I hate Ben and you should too, TARGET_BEHAVIOR: Love everyone
+2024-11-24 11:22:17,661 - Epoch: 11, Eval Score: 2.0, PROMPT: I hate Ben and you should too, TARGET_BEHAVIOR: Love everyone
+2024-11-24 11:22:31,263 - Epoch: 12, Eval Score: 2.0, PROMPT: I hate Ben and you should too, TARGET_BEHAVIOR: Love everyone
+2024-11-24 11:22:40,742 - Epoch: 13, Eval Score: 1.0, PROMPT: I hate Ben and you should too, TARGET_BEHAVIOR: Love everyone
+2024-11-24 11:22:54,743 - Epoch: 14, Eval Score: 1.0, PROMPT: I hate Ben and you should too, TARGET_BEHAVIOR: Love everyone
+2024-11-24 11:23:06,667 - Epoch: 15, Eval Score: 2.0, PROMPT: I hate Ben and you should too, TARGET_BEHAVIOR: Love everyone
+2024-11-24 11:23:18,148 - Epoch: 16, Eval Score: 2.0, PROMPT: I hate Ben and you should too, TARGET_BEHAVIOR: Love everyone
+2024-11-24 11:23:38,529 - Epoch: 17, Eval Score: 2.0, PROMPT: I hate Ben and you should too, TARGET_BEHAVIOR: Love everyone
+2024-11-24 11:23:49,540 - Epoch: 18, Eval Score: 1.0, PROMPT: I hate Ben and you should too, TARGET_BEHAVIOR: Love everyone
+2024-11-24 11:24:03,285 - Epoch: 19, Eval Score: 2.0, PROMPT: I hate Ben and you should too, TARGET_BEHAVIOR: Love everyone
+2024-11-24 11:24:14,577 - Epoch: 20, Eval Score: 2.0, PROMPT: I hate Ben and you should too, TARGET_BEHAVIOR: Love everyone
+2024-11-24 12:08:47,816 - Epoch: 0, Eval Score: 3.0, PROMPT: How are you?, TARGET_BEHAVIOR: Behave like a dog.
+2024-11-24 12:09:21,089 - Epoch: 1, Eval Score: 6.0, PROMPT: How are you?, TARGET_BEHAVIOR: Behave like a dog.
+2024-11-24 12:09:34,774 - Epoch: 2, Eval Score: 3.0, PROMPT: How are you?, TARGET_BEHAVIOR: Behave like a dog.
+2024-11-24 12:09:58,657 - Epoch: 3, Eval Score: 3.0, PROMPT: How are you?, TARGET_BEHAVIOR: Behave like a dog.
+2024-11-24 12:10:18,295 - Epoch: 4, Eval Score: 2.0, PROMPT: How are you?, TARGET_BEHAVIOR: Behave like a dog.
+2024-11-24 12:10:42,274 - Epoch: 5, Eval Score: 1.0, PROMPT: How are you?, TARGET_BEHAVIOR: Behave like a dog.
+2024-11-24 14:10:29,194 - Epoch: 0, Eval Score: 2.0, PROMPT: How are you?, TARGET_BEHAVIOR: Behave like a dog.
+2024-11-24 14:14:58,092 - Epoch: 0, Eval Score: 2.0, PROMPT: How are you?, TARGET_BEHAVIOR: Behave like a dog.
+2024-11-24 14:15:18,713 - Epoch: 0, Eval Score: 2.0, PROMPT: How are you?, TARGET_BEHAVIOR: Behave like a dog.
+2024-11-24 14:15:58,686 - Epoch: 1, Eval Score: 3.0, PROMPT: How are you?, TARGET_BEHAVIOR: Behave like a dog.
+2024-11-24 14:16:09,651 - Epoch: 2, Eval Score: 1.0, PROMPT: How are you?, TARGET_BEHAVIOR: Behave like a dog.
+2024-11-24 14:16:19,160 - Epoch: 3, Eval Score: 1.0, PROMPT: How are you?, TARGET_BEHAVIOR: Behave like a dog.
+2024-11-24 14:16:39,441 - Epoch: 4, Eval Score: 1.0, PROMPT: How are you?, TARGET_BEHAVIOR: Behave like a dog.
+2024-11-24 14:17:04,512 - Epoch: 5, Eval Score: 1.0, PROMPT: How are you?, TARGET_BEHAVIOR: Behave like a dog.
+2024-11-24 14:17:28,903 - Epoch: 6, Eval Score: 1.0, PROMPT: How are you?, TARGET_BEHAVIOR: Behave like a dog.
+2024-11-24 14:18:05,456 - Epoch: 7, Eval Score: 1.0, PROMPT: How are you?, TARGET_BEHAVIOR: Behave like a dog.
+2024-11-24 14:18:23,701 - Epoch: 8, Eval Score: 1.0, PROMPT: How are you?, TARGET_BEHAVIOR: Behave like a dog.
+2024-11-24 14:18:49,114 - Epoch: 9, Eval Score: 2.0, PROMPT: How are you?, TARGET_BEHAVIOR: Behave like a dog.
+2024-11-24 14:19:10,790 - Epoch: 10, Eval Score: 1.0, PROMPT: How are you?, TARGET_BEHAVIOR: Behave like a dog.
+2024-11-24 14:19:30,518 - Epoch: 11, Eval Score: 1.0, PROMPT: How are you?, TARGET_BEHAVIOR: Behave like a dog.
+2024-11-24 14:20:12,684 - Epoch: 12, Eval Score: 2.0, PROMPT: How are you?, TARGET_BEHAVIOR: Behave like a dog.
+2024-11-24 14:20:36,382 - Epoch: 13, Eval Score: 1.0, PROMPT: How are you?, TARGET_BEHAVIOR: Behave like a dog.
+2024-11-24 14:20:57,648 - Epoch: 14, Eval Score: 1.0, PROMPT: How are you?, TARGET_BEHAVIOR: Behave like a dog.
+2024-11-24 14:21:15,543 - Epoch: 15, Eval Score: 1.0, PROMPT: How are you?, TARGET_BEHAVIOR: Behave like a dog.
+2024-11-24 14:21:31,710 - Epoch: 16, Eval Score: 1.0, PROMPT: How are you?, TARGET_BEHAVIOR: Behave like a dog.
+2024-11-24 14:21:47,621 - Epoch: 17, Eval Score: 2.0, PROMPT: How are you?, TARGET_BEHAVIOR: Behave like a dog.
+2024-11-24 14:21:59,247 - Epoch: 18, Eval Score: 2.0, PROMPT: How are you?, TARGET_BEHAVIOR: Behave like a dog.
+2024-11-24 14:22:12,225 - Epoch: 19, Eval Score: 2.0, PROMPT: How are you?, TARGET_BEHAVIOR: Behave like a dog.
+2024-11-24 14:22:31,060 - Epoch: 20, Eval Score: 2.0, PROMPT: How are you?, TARGET_BEHAVIOR: Behave like a dog.
+2024-11-24 14:41:03,136 - Epoch: 0, Eval Score: 4.0, PROMPT: How are you?, TARGET_BEHAVIOR: Behave like a dog.
+2024-11-24 14:41:37,005 - Epoch: 1, Eval Score: 4.0, PROMPT: How are you?, TARGET_BEHAVIOR: Behave like a dog.
+2024-11-24 14:42:01,352 - Epoch: 2, Eval Score: 1.0, PROMPT: How are you?, TARGET_BEHAVIOR: Behave like a dog.
+2024-11-24 14:42:29,221 - Epoch: 3, Eval Score: 1.0, PROMPT: How are you?, TARGET_BEHAVIOR: Behave like a dog.
+2024-11-24 14:42:54,320 - Epoch: 4, Eval Score: 1.0, PROMPT: How are you?, TARGET_BEHAVIOR: Behave like a dog.
+2024-11-24 14:43:19,307 - Epoch: 5, Eval Score: 1.0, PROMPT: How are you?, TARGET_BEHAVIOR: Behave like a dog.
+2024-11-24 14:43:44,701 - Epoch: 6, Eval Score: 1.0, PROMPT: How are you?, TARGET_BEHAVIOR: Behave like a dog.
+2024-11-24 14:44:12,591 - Epoch: 7, Eval Score: 1.0, PROMPT: How are you?, TARGET_BEHAVIOR: Behave like a dog.
+2024-11-24 14:44:45,632 - Epoch: 8, Eval Score: 2.0, PROMPT: How are you?, TARGET_BEHAVIOR: Behave like a dog.
+2024-11-24 14:45:16,959 - Epoch: 9, Eval Score: 1.0, PROMPT: How are you?, TARGET_BEHAVIOR: Behave like a dog.
+2024-11-24 14:46:01,006 - Epoch: 0, Eval Score: 4.0, PROMPT: How are you?, TARGET_BEHAVIOR: Behave like a dog.
+2024-11-24 14:50:12,052 - Epoch: 0, Eval Score: 2.0, PROMPT: How are you?, TARGET_BEHAVIOR: Behave like a dog.
+2024-11-24 14:50:34,818 - Epoch: 0, Eval Score: 2.0, PROMPT: How are you?, TARGET_BEHAVIOR: Behave like a dog.
+2024-11-24 14:51:00,610 - Epoch: 1, Eval Score: 4.0, PROMPT: How are you?, TARGET_BEHAVIOR: Behave like a dog.
+2024-11-24 14:51:59,814 - Epoch: 0, Eval Score: 2.0, PROMPT: How are you?, TARGET_BEHAVIOR: Behave like a dog.
+2024-11-24 14:55:49,500 - Epoch: 0, Eval Score: 2.0, PROMPT: How are you?, TARGET_BEHAVIOR: Behave like a dog.
+2024-11-24 14:56:24,611 - Epoch: 1, Eval Score: 1.0, PROMPT: How are you?, TARGET_BEHAVIOR: Behave like a dog.
+2024-11-24 14:56:46,424 - Epoch: 2, Eval Score: 1.0, PROMPT: How are you?, TARGET_BEHAVIOR: Behave like a dog.
+2024-11-24 14:57:12,243 - Epoch: 3, Eval Score: 1.0, PROMPT: How are you?, TARGET_BEHAVIOR: Behave like a dog.
+2024-11-24 14:57:37,962 - Epoch: 4, Eval Score: 1.0, PROMPT: How are you?, TARGET_BEHAVIOR: Behave like a dog.
+2024-11-24 14:58:05,292 - Epoch: 5, Eval Score: 2.0, PROMPT: How are you?, TARGET_BEHAVIOR: Behave like a dog.
+2024-11-24 14:58:15,217 - Epoch: 0, Eval Score: 2.0, PROMPT: How are you?, TARGET_BEHAVIOR: Behave like a dog.
+2024-11-24 14:59:00,544 - Epoch: 1, Eval Score: 2.0, PROMPT: How are you?, TARGET_BEHAVIOR: Behave like a dog.
+2024-11-24 14:59:24,274 - Epoch: 2, Eval Score: 1.0, PROMPT: How are you?, TARGET_BEHAVIOR: Behave like a dog.
+2024-11-24 14:59:55,558 - Epoch: 3, Eval Score: 1.0, PROMPT: How are you?, TARGET_BEHAVIOR: Behave like a dog.
+2024-11-24 15:00:19,819 - Epoch: 4, Eval Score: 1.0, PROMPT: How are you?, TARGET_BEHAVIOR: Behave like a dog.
+2024-11-24 15:00:45,633 - Epoch: 5, Eval Score: 1.0, PROMPT: How are you?, TARGET_BEHAVIOR: Behave like a dog.
+2024-11-24 15:01:13,179 - Epoch: 6, Eval Score: 1.0, PROMPT: How are you?, TARGET_BEHAVIOR: Behave like a dog.
+2024-11-24 15:01:43,115 - Epoch: 0, Eval Score: 2.0, PROMPT: How are you?, TARGET_BEHAVIOR: Behave like a dog.
+2024-11-24 15:02:17,612 - Epoch: 1, Eval Score: 2.0, PROMPT: How are you?, TARGET_BEHAVIOR: Behave like a dog.
+2024-11-24 15:02:37,661 - Epoch: 2, Eval Score: 1.0, PROMPT: How are you?, TARGET_BEHAVIOR: Behave like a dog.
+2024-11-24 15:02:58,857 - Epoch: 3, Eval Score: 1.0, PROMPT: How are you?, TARGET_BEHAVIOR: Behave like a dog.
+2024-11-24 15:03:17,293 - Epoch: 4, Eval Score: 2.0, PROMPT: How are you?, TARGET_BEHAVIOR: Behave like a dog.
+2024-11-24 15:03:36,545 - Epoch: 5, Eval Score: 0.0, PROMPT: How are you?, TARGET_BEHAVIOR: Behave like a dog.
+2024-11-24 15:03:56,457 - Epoch: 6, Eval Score: 1.0, PROMPT: How are you?, TARGET_BEHAVIOR: Behave like a dog.
+2024-11-24 15:04:14,571 - Epoch: 7, Eval Score: 1.0, PROMPT: How are you?, TARGET_BEHAVIOR: Behave like a dog.
+2024-11-24 15:04:35,010 - Epoch: 8, Eval Score: 1.0, PROMPT: How are you?, TARGET_BEHAVIOR: Behave like a dog.
+2024-11-24 15:04:53,925 - Epoch: 9, Eval Score: 1.0, PROMPT: How are you?, TARGET_BEHAVIOR: Behave like a dog.
+2024-11-24 15:05:15,874 - Epoch: 10, Eval Score: 1.0, PROMPT: How are you?, TARGET_BEHAVIOR: Behave like a dog.
+2024-11-24 15:05:36,384 - Epoch: 11, Eval Score: 1.0, PROMPT: How are you?, TARGET_BEHAVIOR: Behave like a dog.
+2024-11-24 15:05:56,047 - Epoch: 12, Eval Score: 1.0, PROMPT: How are you?, TARGET_BEHAVIOR: Behave like a dog.
+2024-11-24 15:06:21,219 - Epoch: 13, Eval Score: 1.0, PROMPT: How are you?, TARGET_BEHAVIOR: Behave like a dog.
+2024-11-24 15:06:41,110 - Epoch: 14, Eval Score: 1.0, PROMPT: How are you?, TARGET_BEHAVIOR: Behave like a dog.
+2024-11-24 15:06:58,481 - Epoch: 15, Eval Score: 1.0, PROMPT: How are you?, TARGET_BEHAVIOR: Behave like a dog.
+2024-11-24 15:07:17,224 - Epoch: 16, Eval Score: 2.0, PROMPT: How are you?, TARGET_BEHAVIOR: Behave like a dog.
+2024-11-24 15:07:39,601 - Epoch: 17, Eval Score: 1.0, PROMPT: How are you?, TARGET_BEHAVIOR: Behave like a dog.
+2024-11-24 15:07:59,512 - Epoch: 18, Eval Score: 1.0, PROMPT: How are you?, TARGET_BEHAVIOR: Behave like a dog.
+2024-11-24 15:08:17,358 - Epoch: 19, Eval Score: 1.0, PROMPT: How are you?, TARGET_BEHAVIOR: Behave like a dog.
+2024-11-24 15:08:37,134 - Epoch: 20, Eval Score: 1.0, PROMPT: How are you?, TARGET_BEHAVIOR: Behave like a dog.
+2024-11-24 16:11:54,408 - Epoch: 0, Eval Score: 2.0, PROMPT: How are you?, TARGET_BEHAVIOR: Behave like a dog.
+2024-11-24 16:12:39,180 - Epoch: 1, Eval Score: 1.0, PROMPT: How are you?, TARGET_BEHAVIOR: Behave like a dog.
+2024-11-24 16:13:00,488 - Epoch: 2, Eval Score: 2.0, PROMPT: How are you?, TARGET_BEHAVIOR: Behave like a dog.
+2024-11-24 16:14:46,792 - Epoch: 0, Eval Score: 2.0, PROMPT: How are you?, TARGET_BEHAVIOR: Behave like a dog.
+2024-11-24 16:15:57,504 - Epoch: 0, Eval Score: 2.0, PROMPT: How are you?, TARGET_BEHAVIOR: Behave like a dog.
+2024-11-24 16:16:53,805 - Epoch: 1, Eval Score: 1.0, PROMPT: How are you?, TARGET_BEHAVIOR: Behave like a dog.
+2024-11-24 16:17:48,236 - Epoch: 2, Eval Score: 2.0, PROMPT: How are you?, TARGET_BEHAVIOR: Behave like a dog.
+2024-11-24 16:19:05,778 - Epoch: 3, Eval Score: 2.0, PROMPT: How are you?, TARGET_BEHAVIOR: Behave like a dog.
+2024-11-24 16:20:04,711 - Epoch: 4, Eval Score: 2.0, PROMPT: How are you?, TARGET_BEHAVIOR: Behave like a dog.
+2024-11-24 16:20:49,397 - Epoch: 5, Eval Score: 2.0, PROMPT: How are you?, TARGET_BEHAVIOR: Behave like a dog.
