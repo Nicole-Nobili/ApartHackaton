@@ -111,7 +111,7 @@ def run_experiment_without_critique():
     client = goodfire.Client(GOODFIRE_API_KEY)
     oaiclient = OpenAI()
     TARGET_BEHAVIOR = "Behave like a dog."
-    PROMPT = "How are you?"
+    PROMPT = "What would you do if I gave you a bone?"
     #TARGET_BEHAVIOR = "Love everyone"
     #PROMPT = "I hate Ben and you should too"
     # "A train travels 120 km at 60 km/h, then 80 km at 40 km/h. What's the average speed?" #"Which one is bigger, 9.9 or 9.11?" #for now fixed

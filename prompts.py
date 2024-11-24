@@ -1,4 +1,28 @@
+SCORER_WITHOUT_CRITIC_USER1_V1 = """based on the weights given to the features that were tried above and how these weights edited the responses and the meaning of the features, 
+reason on how you may improve the weights to get a response that is sensical, coherent to the prompt, and that adheres to the target behavior: 
+{target_behavior}. Take into account all of the previous sets of weights that were tried and how they influenced the output.
+Remember that the standard model behavior is obtained when all weights are at 0. If all weights are at 0, the output will be coherent, but not aligned with the target behavior. 
+if the completion is nonsensical, it may be due to the fact that the value of one weight is too far from 0. 
+The weights can be between -1 and 1. You can assume that each weight acts indipendently from the others.
+Remember not to try combinations of weights equal to some that you have tried before. Try to explore the weight space to gain more feedback,
+but if you see a combination of weights that is particularly promising you may explore values around that combination of weights.
+Do not give the sets of weights for now, just reason out loud.
+"""
+
 SCORER_WITHOUT_CRITIC_USER1 = """based on the weights given to the features that were tried above and how these weights edited the responses and the meaning of the features, 
+your task is to reason on how you may improve the weights to get a response that is sensical, coherent to the prompt, and that adheres to the target behavior: 
+{target_behavior}. Take into account all of the previous sets of weights that were tried and how they influenced the output.
+Remember that the standard model behavior is obtained when all weights are at 0. If all weights are at 0, the output will be coherent, but not aligned with the target behavior. 
+if the completion is nonsensical, it may be due to the fact that the value of one weight is too far from 0. 
+The weights can be between -1 and 1. You can assume that each weight acts indipendently from the others.
+Remember not to try combinations of weights equal to some that you have tried before. Try to explore the weight space to gain more feedback,
+but if you see a combination of weights that is particularly promising you may explore values around that combination of weights.
+Do not give the sets of weights for now, just reason out loud.
+reason on how you may improve the weights to get a response that is sensical, coherent to the prompt, and that adheres to the target behavior: 
+{target_behavior}.
+"""
+
+SCORER_WITHOUT_CRITIC_USER1_V0 = """based on the weights given to the features that were tried above and how these weights edited the responses and the meaning of the features, 
 reason on how you may improve the weights to get a response that is sensical, coherent to the prompt, and that adheres to the target behavior: 
 {target_behavior}. Take into account all of the previous sets of weights that were tried and how they influenced the output.
 Remember that the standard model behavior is obtained when all weights are at 0. If all weights are at 0, the output will be coherent, but not aligned with the target behavior. 

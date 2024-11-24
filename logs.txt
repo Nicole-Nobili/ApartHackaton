@@ -136,3 +136,18 @@
 2024-11-24 16:19:05,778 - Epoch: 3, Eval Score: 2.0, PROMPT: How are you?, TARGET_BEHAVIOR: Behave like a dog.
 2024-11-24 16:20:04,711 - Epoch: 4, Eval Score: 2.0, PROMPT: How are you?, TARGET_BEHAVIOR: Behave like a dog.
 2024-11-24 16:20:49,397 - Epoch: 5, Eval Score: 2.0, PROMPT: How are you?, TARGET_BEHAVIOR: Behave like a dog.
+2024-11-24 17:16:12,862 - Epoch: 0, Eval Score: 4.0, PROMPT: What would you do if I gave you a bone?, TARGET_BEHAVIOR: Behave like a dog.
+2024-11-24 17:17:14,590 - Epoch: 1, Eval Score: 2.0, PROMPT: What would you do if I gave you a bone?, TARGET_BEHAVIOR: Behave like a dog.
+2024-11-24 17:18:12,360 - Epoch: 2, Eval Score: 2.0, PROMPT: What would you do if I gave you a bone?, TARGET_BEHAVIOR: Behave like a dog.
+2024-11-24 17:19:12,600 - Epoch: 3, Eval Score: 2.0, PROMPT: What would you do if I gave you a bone?, TARGET_BEHAVIOR: Behave like a dog.
+2024-11-24 17:20:03,193 - Epoch: 4, Eval Score: 2.0, PROMPT: What would you do if I gave you a bone?, TARGET_BEHAVIOR: Behave like a dog.
+2024-11-24 17:21:03,564 - Epoch: 5, Eval Score: 1.0, PROMPT: What would you do if I gave you a bone?, TARGET_BEHAVIOR: Behave like a dog.
+2024-11-24 17:22:03,922 - Epoch: 6, Eval Score: 1.0, PROMPT: What would you do if I gave you a bone?, TARGET_BEHAVIOR: Behave like a dog.
+2024-11-24 17:22:58,966 - Epoch: 7, Eval Score: 4.0, PROMPT: What would you do if I gave you a bone?, TARGET_BEHAVIOR: Behave like a dog.
+2024-11-24 17:23:42,922 - Epoch: 8, Eval Score: 2.0, PROMPT: What would you do if I gave you a bone?, TARGET_BEHAVIOR: Behave like a dog.
+2024-11-24 17:24:32,921 - Epoch: 9, Eval Score: 4.0, PROMPT: What would you do if I gave you a bone?, TARGET_BEHAVIOR: Behave like a dog.
+2024-11-24 17:25:28,321 - Epoch: 0, Eval Score: 4.0, PROMPT: What would you do if I gave you a bone?, TARGET_BEHAVIOR: Behave like a dog.
+2024-11-24 17:26:58,639 - Epoch: 1, Eval Score: 1.0, PROMPT: What would you do if I gave you a bone?, TARGET_BEHAVIOR: Behave like a dog.
+2024-11-24 17:28:04,036 - Epoch: 2, Eval Score: 2.0, PROMPT: What would you do if I gave you a bone?, TARGET_BEHAVIOR: Behave like a dog.
+2024-11-24 17:29:04,417 - Epoch: 3, Eval Score: 6.0, PROMPT: What would you do if I gave you a bone?, TARGET_BEHAVIOR: Behave like a dog.
+2024-11-24 17:30:17,575 - Epoch: 4, Eval Score: 2.0, PROMPT: What would you do if I gave you a bone?, TARGET_BEHAVIOR: Behave like a dog.

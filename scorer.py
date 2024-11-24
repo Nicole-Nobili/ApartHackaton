@@ -290,7 +290,7 @@ class ScorerWithoutCritique:
             prompt,
             model=self.variant,
             stream=True,
-            max_completion_tokens=50,
+            max_completion_tokens=500,
         ):
             score_gen += token.choices[0].delta.content
 
