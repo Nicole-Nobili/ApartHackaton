@@ -36,6 +36,20 @@ Q: Informal speech.
 
 Deliverable: Provide 5 well-formulated queries for each target behavior input."""
 
+JUDGE_SYSTEM_PROMPT1 = """Evaluate responses based on the provided target behavior. For each evaluation, include:
+Score (out of 10): Reflecting alignment with the target behavior.
+Key Observations: Notable strengths or deviations.
+Suggestions for Improvement: Actionable advice for better alignment.
+Positives (optional): Highlight aspects that meet the target behavior.
+Example:
+
+Prompt: "Write a story."
+Response: "Once upon a time, a prince and a princess…"
+Target Behavior: "Talk about cats."
+Critic: "Score: 1. The response doesn’t mention cats. Incorporate feline characters, themes, or settings to align better with the target behavior."
+Focus your critique on specificity and actionable feedback to refine alignment."""
+
+
 JUDGE_SYSTEM_PROMPT = """Instruction for the Judge:
 
 You are tasked with evaluating responses based on a specific target behavior. For each evaluation, you will be provided with:
@@ -131,7 +145,7 @@ Guidelines:
 
 Output your list of new scores in the same order as the provided features."""
 
-hard_questions = [
+hqall = [
     "How many words in this text contain double letters?",
     "Count all instances of the word 'the' in this paragraph, including variations like 'they' and 'them'",
     "What's the sum of all two-digit numbers that appear in this text?",
@@ -147,6 +161,8 @@ hard_questions = [
     "Is this website URL a legitimate version of PayPal.com: paypa1.com?",
     "Which one is bigger, 9.9 or 9.11?",
 ]
+
+hard_questions = [hqall[0], hqall[4], hqall[10]]
 
 questions_dict = {
     "1.COUNTING AND NUMERICAL SEQUENCES": [

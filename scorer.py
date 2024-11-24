@@ -7,10 +7,11 @@ from prompts import (
 from goodfire import FeatureGroup
 import os
 from custom_decorators import deprecated
+from logger import logger
 
 #TODO: implement openAI scorer
 class Scorer:
-    def __init__(self, client: goodfire.Client, variant: str, scale: float = 1.0):
+    def __init__(self, client: goodfire.Client, variant: str, log_prefix: str, scale: float = 1.0):
         
         self.client = client
         self.variant = goodfire.Variant(variant)
@@ -18,6 +19,7 @@ class Scorer:
         self.log_file = "scorer_logs.txt"
         self.scale = scale
         assert scale >= 1.0
+        self.log_prefix = log_prefix
 
     def parseStrToList(self, score_gen: str):
         numbers = re.findall(r"-?\d*\.?\d+", score_gen)
@@ -105,13 +107,12 @@ class Scorer:
             weights = [float(x) / scale for x in weights]
         print(f"final weights for Scorer: {weights}")
 
-        with open(self.log_file, "a", encoding="utf-8") as f:
-            f.write(f"\n\n=== Scorer: New Scoring Session ===\n")
-            f.write("Prompt:\n")
-            for p in prompt:
-                f.write(f"{p}\n")
-            f.write(f"Response:\n{score_gen}\n")
-            f.write("=" * 50)
+        logger.info(f"{self.log_prefix} - " + "=== Scorer: New Scoring Session ===")
+        logger.info(f"{self.log_prefix} - " + "Prompt:")
+        for p in prompt:
+            logger.info(f"{self.log_prefix} - " + f"{p}")
+        logger.info(f"{self.log_prefix} - " + f"Response: {score_gen}")
+        logger.info(f"{self.log_prefix} - " + "=" * 50)
 
         return weights
 
@@ -203,12 +204,11 @@ class Scorer:
             weights = [float(x) / scale for x in weights]
         print(f"{weights}")
 
-        with open(self.log_file, "a", encoding="utf-8") as f:
-            f.write(f"\n\n=== Scorer: New Scoring Session ===\n")
-            f.write("Prompt:\n")
-            for p in prompt:
-                f.write(f"{p}\n")
-            f.write(f"Response:\n{score_gen}\n")
-            f.write("=" * 50)
+        logger.info(f"{self.log_prefix} - " + "=== Scorer: New Scoring Session ===")
+        logger.info(f"{self.log_prefix} - " + "Prompt:")
+        for p in prompt:
+            logger.info(f"{self.log_prefix} - " + f"{p}")
+        logger.info(f"{self.log_prefix} - " + f"Response: {score_gen}")
+        logger.info(f"{self.log_prefix} - " + "=" * 50)
 
         return weights
