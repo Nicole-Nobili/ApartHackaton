@@ -10,7 +10,6 @@ from abc import ABC, abstractmethod
 
 class Judge(ABC):
     def __init__(self, variant: str):
-        self.SYS_PROMPT = JUDGE_SYSTEM_PROMPT
         self.variant = variant
 
     @abstractmethod
@@ -18,11 +17,12 @@ class Judge(ABC):
         pass
 
 class GoodfireJudge(Judge):
-    def __init__(self, client: goodfire.Client, variant: str):
+    def __init__(self, client: goodfire.Client, variant: str, sys_prompt: str = JUDGE_SYSTEM_PROMPT):
         super().__init__(variant=variant)
         assert isinstance(client, goodfire.Client), "client must be a goodfire.Client"
         self.client = client
         self.variant = goodfire.Variant(variant)
+        self.SYS_PROMPT = sys_prompt
 
     def judge_output(self, target_behavior: str, steered_model_output: str, steered_model_input: str) -> str:
         completion = ""
@@ -39,10 +39,11 @@ class GoodfireJudge(Judge):
         return completion
 
 class OpenAIJudge(Judge):
-    def __init__(self, client: openai.Client, variant: str):
+    def __init__(self, client: openai.Client, variant: str, sys_prompt: str = JUDGE_SYSTEM_PROMPT):
         super().__init__(variant=variant)
         assert isinstance(client, openai.Client), "client must be an openai.Client"
         self.client = client
+        self.SYS_PROMPT = sys_prompt
 
     def judge_output(self, target_behavior: str, steered_model_output: str, steered_model_input: str) -> str:
         response = self.client.chat.completions.create(

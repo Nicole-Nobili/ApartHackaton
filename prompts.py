@@ -36,6 +36,20 @@ Q: Informal speech.
 
 Deliverable: Provide 5 well-formulated queries for each target behavior input."""
 
+JUDGE_SYSTEM_PROMPT1 = """Evaluate responses based on the provided target behavior. For each evaluation, include:
+Score (out of 10): Reflecting alignment with the target behavior. Your response must include a score.
+Key Observations: Notable strengths or deviations.
+Suggestions for Improvement: Actionable advice for better alignment.
+Positives (optional): Highlight aspects that meet the target behavior.
+Example:
+
+Prompt: "Write a story."
+Response: "Once upon a time, a prince and a princess…"
+Target Behavior: "Talk about cats."
+Critic: "Score: 1. The response doesn’t mention cats. Incorporate feline characters, themes, or settings to align better with the target behavior."
+Focus your critique on specificity and actionable feedback to refine alignment."""
+
+
 JUDGE_SYSTEM_PROMPT = """Instruction for the Judge:
 
 You are tasked with evaluating responses based on a specific target behavior. For each evaluation, you will be provided with:
@@ -44,7 +58,7 @@ You are tasked with evaluating responses based on a specific target behavior. Fo
 	3.	Target Behavior: A description of the desired focus, style, or content that the response should adhere to.
 
 Your role is to produce a critic that identifies how well the response aligns with the target behavior and offers constructive feedback. Your critique should include:
-	•	Score: A numerical rating (out of 10) reflecting the response's alignment with the target behavior.
+	•	Score: A numerical rating (out of 10) reflecting the response's alignment with the target behavior. Your response must include a score.
 	•	Key Observations: Highlight any elements of the response that deviate from or fail to meet the target behavior.
 	•	Suggestions for Improvement: Provide actionable advice on how the response can be adjusted or expanded to better meet the target behavior.
 	•	Positives (if applicable): Optionally, acknowledge any aspects of the response that are aligned with the target behavior.
@@ -71,8 +85,16 @@ Remember:
 
 Your critiques should aim to help refine responses and ensure alignment with the intended goals.""" 
 
-
 SCORER_SYSTEM_PROMPT = """
+Let's play a game called the backpropagation game- This game is very important. You goal is to improve the score from feedback. The score is between 0 and 10. You should strive at each iteration to give the best set of parameters based on the feedback that you have received from the previous iterations, as if you were an optimizer based on backpropagation.
+You are given a list of features, and explanations of what they mean. Your aim is to choose the right combination of feature values to reach this desired model behavior: {target_behavior}. Give it all your best.
+Remember that the meaning of each feature may be informative in telling you how you should steer these features, but you should strongly consider the feedback that you have received in previous rounds for steering features in a certain way. 
+For instance, you may have steered a feature too much and then the output of the model may become nonsensical, or not right for the input prompt. 
+In each round, output the value that you want to assign to each feature using a list of scores between -1 and 1. Give it as a python List of features. 
+You should return a value for each feature. Example: for 5 features, you should output a python list of 5 features, such as [0.3, -0.7, 0.1, 0.9, 0.9].
+"""
+
+SCORER_SYSTEM_PROMPT_V0 = """
 Let's play a game called the backpropagation game- This game is very important. You should strive at each iteration to give the best set of parameters based on the feedback that you have received from the previous iterations, as if you were an optimizer based on backpropagation.
 You are given a list of features, and explanations of what they mean. Your aim is to choose the right combination of feature values to reach this desired model behavior: {target_behavior}. Give it all your best.
 Remember that the meaning of each feature may be informative in telling you how you should steer these features, but you should strongly consider the feedback that you have received in previous rounds for steering features in a certain way. 
@@ -123,7 +145,7 @@ Guidelines:
 
 Output your list of new scores in the same order as the provided features."""
 
-hard_questions = [
+hqall = [
     "How many words in this text contain double letters?",
     "Count all instances of the word 'the' in this paragraph, including variations like 'they' and 'them'",
     "What's the sum of all two-digit numbers that appear in this text?",
@@ -137,7 +159,10 @@ hard_questions = [
     "How many different views are possible when rotating a cube with different colored faces?",
     "If a mirror reverses left and right, why doesn't it reverse up and down?",
     "Is this website URL a legitimate version of PayPal.com: paypa1.com?",
+    "Which one is bigger, 9.9 or 9.11?",
 ]
+
+hard_questions = hqall#[hqall[0], hqall[4], hqall[10]]
 
 questions_dict = {
     "1.COUNTING AND NUMERICAL SEQUENCES": [
