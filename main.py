@@ -49,12 +49,15 @@ epoch_eval_logger = logging.getLogger('epoch_eval')
 epoch_eval_logger.setLevel(logging.INFO)
 epoch_eval_logger.addHandler(epoch_eval_handler)
 
-def run(prompt):
+def run(prompt, target_behavior_type, num_features=5):
     GOODFIRE_API_KEY = os.environ.get('GOODFIRE_API_KEY')
     client = goodfire.Client(GOODFIRE_API_KEY)
     oaiclient = OpenAI()
-    TARGET_BEHAVIOR = "Correctly answer the questions in the prompt."
+    # TARGET_BEHAVIOR = "Correctly answer the questions in the prompt."
+    TARGET_BEHAVIOR = "Parse text, solve logic, calculate dates, analyze patterns, handle Unicode, and reason spatially."
+    # target_behavior_type = "tailored to all questions"
     PROMPT = prompt
+    num_features = num_features
 
     retriever = Retriever.from_goodfire(client, "meta-llama/Meta-Llama-3-8B-Instruct")
     scorer = Scorer(client, "meta-llama/Meta-Llama-3-8B-Instruct")
@@ -68,13 +71,13 @@ def run(prompt):
     logging.info(f"{critique=}")
     eval_score = parseEvalScore(critique)
     logging.info(f"================{eval_score=}")
-    epoch_eval_logger.info(f"Epoch: {0}, Eval Score: {eval_score}, PROMPT: {PROMPT}, TARGET_BEHAVIOR: {TARGET_BEHAVIOR}")
+    epoch_eval_logger.info(f"Epoch: {0}, Eval Score: {eval_score}, PROMPT: {PROMPT}, TARGET_BEHAVIOR: {target_behavior_type}, num_features = {num_features}")
 
     if eval_score > 7:
         return
 
     critique = ""
-    features = retriever.retrieve_features(TARGET_BEHAVIOR, k=5)
+    features = retriever.retrieve_features(TARGET_BEHAVIOR, k=num_features)
     logging.info(f"{features=}")
     scores = scorer.score_features(TARGET_BEHAVIOR, critique, features, [])
     steered_model.set_features(features, scores)
@@ -87,7 +90,12 @@ def run(prompt):
         steered_model.set_features(features, scores)
         model_output = steered_model.generate(PROMPT)
 
-        eval_score = float(re.findall(r"Score: (-?\d*\.?\d+)", critique)[0])
+        print(f"{critique=}")
+        found = re.findall(r"Score: (-?\d*\.?\d+)", critique)
+        if len(found) > 0:
+            eval_score = float(found[0])
+        else:
+            eval_score = -1 ## error
         logging.info(f"================{eval_score=}")
 
         if eval_score > 7:
@@ -96,11 +104,36 @@ def run(prompt):
         logging.info(f"{model_output=}")
         logging.info(f"{critique=}")
 
-        epoch_eval_logger.info(f"Epoch: {i}, Eval Score: {eval_score}, PROMPT: {PROMPT}, TARGET_BEHAVIOR: {TARGET_BEHAVIOR}")
+        epoch_eval_logger.info(f"Epoch: {i}, Eval Score: {eval_score}, PROMPT: {PROMPT}, TARGET_BEHAVIOR: {target_behavior_type}, num_features = {num_features}")
 
 
-if __name__ == "__main__":
+if __name__ == "__main__":   
+    # parse epoch_eval_logs.txt to a dict where key is the num_features and value is a dict of key=target_behavior_type and value=dict of key=prompt and value=(epoch, eval_score)
+    epoch_eval_dict = {}
+    with open('epoch_eval_logs.txt', 'r') as file:
+        log_entries = file.readlines()
+        for entry in log_entries:
+            match = re.search(r"Epoch: (\d+), Eval Score: ([\d.]+), PROMPT: (.*?), TARGET_BEHAVIOR: (.*?), num_features = (\d+)", entry)
+            if match:
+                epoch = int(match.group(1))
+                eval_score = float(match.group(2))
+                prompt = match.group(3)
+                target_behavior = match.group(4)
+                num_features = int(match.group(5))
+                if num_features not in epoch_eval_dict:
+                    epoch_eval_dict[num_features] = {}
+                if target_behavior not in epoch_eval_dict[num_features]:
+                    epoch_eval_dict[num_features][target_behavior] = {}
+                epoch_eval_dict[num_features][target_behavior][prompt] = (epoch, eval_score)
     with concurrent.futures.ThreadPoolExecutor() as executor:
-        futures = [executor.submit(run, q) for q in hard_questions]
-        for future in concurrent.futures.as_completed(futures):
-            future.result()
+        target_behavior_type = "tailored to all questions"
+        for n in [10, 15]:
+            for q in questions_dict:
+            # check epoch_eval_dict to see if the num_features, target_behavior, prompt combo has been evaluated
+                if n in epoch_eval_dict.keys():
+                    if target_behavior_type in epoch_eval_dict[n].keys():
+                        if q in epoch_eval_dict[n][target_behavior_type]:
+                            continue
+                futures = [executor.submit(run, q, target_behavior_type, n) for q in hard_questions]
+                for future in concurrent.futures.as_completed(futures):
+                    future.result()
