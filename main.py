@@ -22,7 +22,12 @@ from logger import ConcurrentLogHandler, logger, logging
 import concurrent.futures
 
 def parseEvalScore(critique: str):
-    return float(re.findall(r"Score: (-?\d*\.?\d+)", critique)[0])
+    found = re.findall(r"Score: (-?\d*\.?\d+)", critique)
+    if len(found) > 0:
+        eval_score = float(found[0])
+    else:
+        eval_score = 0 ## error, no score found
+    return eval_score
 
 # Configure shared epoch evaluation logger
 epoch_eval_logger = logging.getLogger('epoch_eval')
@@ -87,7 +92,7 @@ def run(prompt, judge_sys_prompt=JUDGE_SYSTEM_PROMPT, log_prefix="", num_feature
         if len(found) > 0:
             eval_score = float(found[0])
         else:
-            eval_score = -1 ## error
+            eval_score = -1 ## no score, invalid score
         logger.info(f"{log_prefix} - " + f"================{eval_score=}")
 
         if eval_score > 7:

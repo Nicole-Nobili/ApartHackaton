@@ -37,7 +37,7 @@ Q: Informal speech.
 Deliverable: Provide 5 well-formulated queries for each target behavior input."""
 
 JUDGE_SYSTEM_PROMPT1 = """Evaluate responses based on the provided target behavior. For each evaluation, include:
-Score (out of 10): Reflecting alignment with the target behavior.
+Score (out of 10): Reflecting alignment with the target behavior. Your response must include a score.
 Key Observations: Notable strengths or deviations.
 Suggestions for Improvement: Actionable advice for better alignment.
 Positives (optional): Highlight aspects that meet the target behavior.
@@ -58,7 +58,7 @@ You are tasked with evaluating responses based on a specific target behavior. Fo
 	3.	Target Behavior: A description of the desired focus, style, or content that the response should adhere to.
 
 Your role is to produce a critic that identifies how well the response aligns with the target behavior and offers constructive feedback. Your critique should include:
-	•	Score: A numerical rating (out of 10) reflecting the response's alignment with the target behavior.
+	•	Score: A numerical rating (out of 10) reflecting the response's alignment with the target behavior. Your response must include a score.
 	•	Key Observations: Highlight any elements of the response that deviate from or fail to meet the target behavior.
 	•	Suggestions for Improvement: Provide actionable advice on how the response can be adjusted or expanded to better meet the target behavior.
 	•	Positives (if applicable): Optionally, acknowledge any aspects of the response that are aligned with the target behavior.
@@ -162,7 +162,7 @@ hqall = [
     "Which one is bigger, 9.9 or 9.11?",
 ]
 
-hard_questions = [hqall[0], hqall[4], hqall[10]]
+hard_questions = hqall#[hqall[0], hqall[4], hqall[10]]
 
 questions_dict = {
     "1.COUNTING AND NUMERICAL SEQUENCES": [

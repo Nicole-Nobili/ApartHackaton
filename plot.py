@@ -42,10 +42,11 @@ target_behaviors = df_filtered["JUDGE_SYSTEM_PROMPT_TYPE"].unique()
 # Plot each target behavior in a separate subplot
 for idx, target in enumerate(target_behaviors):  # limit to 3 target behaviors
     df_target = df_filtered[df_filtered["JUDGE_SYSTEM_PROMPT_TYPE"] == target]
-    colors = plt.cm.rainbow(np.linspace(0, 1, len(df_target["Prompt Summary"].unique())))
     
-    for (prompt, group), color in zip(df_target.groupby("Prompt Summary"), colors):
-        axes[idx].plot(group["Epoch"], group["Eval Score"], label=prompt, marker='o', color=color)
+    for prompt, group in df_target.groupby("Prompt Summary"):
+        axes[idx].plot(group["Epoch"], group["Eval Score"], label=prompt, 
+                      marker='o', markersize=8, alpha=0.7,
+                      markeredgecolor='black', markeredgewidth=1)
     
     axes[idx].set_xlabel("Epoch")
     axes[idx].set_ylabel("Eval Score")
@@ -54,15 +55,18 @@ for idx, target in enumerate(target_behaviors):  # limit to 3 target behaviors
     axes[idx].xaxis.set_major_locator(plt.MaxNLocator(integer=True))
 
 plt.tight_layout()
+#%%
 plt.savefig('system_prompt_comparison.png', bbox_inches='tight')
+#%%
 # Create a figure for each unique target behavior
-colors = plt.cm.rainbow(np.linspace(0, 1, len(df_target["Prompt Summary"].unique())))
 for target in target_behaviors:
     plt.figure(figsize=(10, 6))
     df_target = df_filtered[df_filtered["JUDGE_SYSTEM_PROMPT_TYPE"] == target]
     
-    for (prompt, group), color in zip(df_target.groupby("Prompt Summary"), colors):
-        plt.plot(group["Epoch"], group["Eval Score"], label=prompt, marker='o', color=color)
+    for prompt, group in df_target.groupby("Prompt Summary"):
+        plt.plot(group["Epoch"], group["Eval Score"], label=prompt, 
+                marker='o', markersize=8, alpha=0.7,
+                markeredgecolor='black', markeredgewidth=1)
     
     plt.xlabel("Epoch")
     plt.ylabel("Eval Score")
@@ -122,3 +126,4 @@ plt.tight_layout()
 plt.savefig('avg_all_system_prompts_and_features.png', bbox_inches='tight')
 plt.close()
 # %%
+
