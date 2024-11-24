@@ -31,7 +31,7 @@ epoch_eval_logger.setLevel(logging.INFO)
 epoch_eval_handler = ConcurrentLogHandler('epoch_eval_logs.txt')
 epoch_eval_logger.addHandler(epoch_eval_handler)
 
-def run(prompt, judge_sys_prompt, log_prefix, num_features=5):
+def run(prompt, judge_sys_prompt=JUDGE_SYSTEM_PROMPT, log_prefix="", num_features=5):
     GOODFIRE_API_KEY = os.environ.get('GOODFIRE_API_KEY')
     client = goodfire.Client(GOODFIRE_API_KEY)
     oaiclient = OpenAI()
