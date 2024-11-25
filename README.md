@@ -1,3 +1,5 @@
+![image](https://github.com/user-attachments/assets/a0b9f076-bb05-442b-ae85-b68ea4ceb0d2)
+
 # Can we steer a model’s behavior with just one prompt? investigating SAE-driven auto-steering
 
 **This work has been done during the Reprogramming AI models Hackaton, organized by Apart AI and Goodfire.**
