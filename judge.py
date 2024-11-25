@@ -24,7 +24,7 @@ class GoodfireJudge(Judge):
         self.variant = goodfire.Variant(variant)
         self.SYS_PROMPT = sys_prompt
 
-    def judge_output(self, target_behavior: str, steered_model_output: str, steered_model_input: str) -> str:
+    def judge_output(self, target_behavior: str, steered_model_output: str, steered_model_input: str, max_tokens: int = 1024) -> str:
         completion = ""
         for token in self.client.chat.completions.create(
             [
@@ -33,7 +33,7 @@ class GoodfireJudge(Judge):
             ],
             model=self.variant,
             stream=True,
-            max_completion_tokens=200,
+            max_completion_tokens=max_tokens,
         ):
             completion += token.choices[0].delta.content
         return completion
@@ -45,12 +45,13 @@ class OpenAIJudge(Judge):
         self.client = client
         self.SYS_PROMPT = sys_prompt
 
-    def judge_output(self, target_behavior: str, steered_model_output: str, steered_model_input: str) -> str:
+    def judge_output(self, target_behavior: str, steered_model_output: str, steered_model_input: str, max_tokens: int = 1024) -> str:
         response = self.client.chat.completions.create(
             model=self.variant,
             messages=[
                 {"role": "system", "content": self.SYS_PROMPT},
                 {"role": "user", "content": f"""Input prompt:\n{steered_model_input}\n\nResponse:\n{steered_model_output}\n\nTarget Behavior:{target_behavior}\n\n"""}
-            ]
+            ],
+            max_tokens=max_tokens
         )
         return response.choices[0].message.content
