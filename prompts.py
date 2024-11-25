@@ -1,3 +1,18 @@
+SCORER_WITHOUT_CRITIC_USER1 = """based on the weights given to the features that were tried above and how these weights edited the responses and the meaning of the features, 
+reason on how you may improve the weights to get a response that is sensical, coherent to the prompt, and that adheres to the target behavior: 
+{target_behavior}. Take into account all of the previous sets of weights that were tried and how they influenced the output.
+Remember that the standard model behavior is obtained when all weights are at 0. If all weights are at 0, the output will be coherent, but not aligned with the target behavior. 
+if the completion is nonsensical, it may be due to the fact that one weight is either too high or too low. 
+Remember not to try combinations of weights equal to some that you have tried before. Try to explore the weight space to gain more feedback,
+but if you see a combination of weights that is particularly promising you may explore values around that combination of weights.
+Do not give the sets of weights for now, just reason out loud.
+"""
+
+SCORER_WITHOUT_CRITIC_USER2 = """
+Now, based on your previous reasoning, output the value that you want to assign to each feature using a list of scores between -1 and 1. Give it as a python List of features. 
+You should return a value for each feature. Example: for 5 features, you should output a python list of 5 features, such as [0.3, -0.7, 0.1, 0.9, 0.9].
+"""
+
 RETRIEVER_SYSTEM_PROMPT = """Instruction to Retriever:
 
 You will receive a target behavior as input. Your task is to generate 5 queries to retrieve relevant features from the database. These queries should aim to identify features directly linked to the target behavior as well as features associated with opposite behaviors, which will be suppressed later. Optionally, you can receive also a critic from the judge to guide your query formulation.
